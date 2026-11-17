@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Posteingang Büro King GmbH – interaktive Übung</title>
+<style>
+  :root{
+    --fl-hell:#CCCCFF; --fl:#9E9EFF; --fl-dunkel:#6c6cd9; --grau:#D1D1D1; --orange:#FF9933; --orange-d:#e67e17;
+    --ink:#262640; --ok:#2f9e5b; --bad:#e0533f; --paper:#fffdf7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);line-height:1.45;font-size:17px;
+    background:var(--fl-hell);
+    background-image:radial-gradient(rgba(255,255,255,.55) 2px,transparent 2px);background-size:26px 26px;min-height:100vh}
+  button{font-family:inherit}
+  .wrap{max-width:1080px;margin:0 auto;padding:18px}
+
+  /* Kopfzeile */
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    background:var(--fl);color:#fff;border-radius:22px;padding:14px 20px;box-shadow:0 6px 0 var(--fl-dunkel)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand svg{flex:0 0 auto}
+  .brand h1{margin:0;font-size:1.35rem;line-height:1.1}
+  .brand small{display:block;font-weight:normal;opacity:.95;font-size:.85rem}
+  .top-actions{display:flex;gap:8px;align-items:center}
+  .pill{background:#fff;color:var(--ink);border:0;border-radius:999px;padding:9px 16px;font-weight:bold;cursor:pointer;box-shadow:0 3px 0 var(--fl-dunkel)}
+  .pill:active{transform:translateY(2px);box-shadow:0 1px 0 var(--fl-dunkel)}
+  .pill.orange{background:var(--orange);color:#fff;box-shadow:0 3px 0 var(--orange-d)}
+
+  .panel{background:#fff;border-radius:22px;padding:22px;margin-top:18px;box-shadow:0 6px 0 rgba(108,108,217,.35)}
+  h2{margin:0 0 10px;font-size:1.5rem}
+  .big-btn{border:0;border-radius:16px;padding:14px 26px;font-size:1.1rem;font-weight:bold;cursor:pointer;
+    background:var(--orange);color:#fff;box-shadow:0 5px 0 var(--orange-d);transition:transform .08s}
+  .big-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--orange-d)}
+  .big-btn.lila{background:var(--fl);box-shadow:0 5px 0 var(--fl-dunkel)}
+  .big-btn:disabled{opacity:.45;cursor:default}
+
+  /* Start */
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center}
+  @media(max-width:760px){.hero{grid-template-columns:1fr}}
+  .name-in{font-size:1.1rem;padding:12px 14px;border-radius:12px;border:3px solid var(--fl);width:100%;max-width:340px}
+  .korb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:16px}
+  .korb-card{border:3px solid var(--fl-hell);border-radius:20px;padding:16px;cursor:pointer;background:#fafaff;transition:transform .15s,border-color .15s;text-align:center}
+  .korb-card:hover{transform:translateY(-4px) rotate(-.5deg);border-color:var(--orange)}
+  .korb-card h3{margin:8px 0 2px}
+  .korb-card .meta{color:#666;font-size:.95rem}
+
+  /* Arbeitsbereich */
+  .hud{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+  .progress{flex:1;min-width:220px}
+  .bar{height:16px;background:#ececff;border-radius:999px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--fl),var(--orange));border-radius:999px;transition:width .5s}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:var(--fl-hell);border-radius:999px;padding:6px 12px;font-weight:bold;font-size:.95rem}
+  .chip.streak{background:#ffe3c6}
+  .layout{display:grid;grid-template-columns:1fr 280px;gap:18px;margin-top:16px}
+  @media(max-width:880px){.layout{grid-template-columns:1fr}}
+
+  .desk{background:#f1efe8;border-radius:18px;padding:18px;position:relative;min-height:300px}
+  .envelope{position:relative;background:var(--paper);border-radius:10px;padding:20px 24px 28px;max-width:560px;margin:0 auto;
+    box-shadow:0 8px 18px rgba(0,0,0,.13);border:1px solid #e8e1cd;animation:slideIn .45s ease-out}
+  .envelope::before{content:"";position:absolute;inset:0;border-radius:10px;pointer-events:none;
+    background:repeating-linear-gradient(135deg,var(--fl) 0 10px,transparent 10px 20px,var(--orange) 20px 30px,transparent 30px 40px);
+    -webkit-mask:linear-gradient(#000 0 0) top/100% 7px no-repeat,linear-gradient(#000 0 0) bottom/100% 7px no-repeat;
+            mask:linear-gradient(#000 0 0) top/100% 7px no-repeat,linear-gradient(#000 0 0) bottom/100% 7px no-repeat;opacity:.55}
+  @keyframes slideIn{from{transform:translateX(60px) rotate(4deg);opacity:0}to{transform:none;opacity:1}}
+  .env-stamp{position:absolute;right:20px;top:18px}
+  .postmark{position:absolute;right:66px;top:26px;opacity:.55}
+  .env-from{font-size:.78rem;color:#666;border-bottom:1px solid #bbb;display:inline-block;padding-bottom:2px;margin:6px 0 16px;max-width:62%}
+  .env-to{font-size:1.2rem;line-height:1.55;margin-left:4px}
+  .env-to b{background:#fff2c8;padding:0 3px;border-radius:3px}
+  .env-label{position:absolute;left:18px;bottom:-14px;background:var(--fl);color:#fff;font-weight:bold;border-radius:999px;padding:4px 12px;font-size:.85rem}
+  .envelope.closed-away{animation:away .5s forwards}
+  @keyframes away{to{transform:translateY(-30px) scale(.85);opacity:.0}}
+
+  .letter{position:relative;background:#fff;border-radius:8px;padding:18px 22px 78px;max-width:560px;margin:18px auto 0;
+    box-shadow:0 6px 14px rgba(0,0,0,.12);border-top:8px solid var(--fl);animation:up .5s ease-out}
+  @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  .letter h4{margin:0 0 8px;font-size:1.15rem}
+  .letter ul{margin:6px 0 0;padding-left:22px}
+  .stamp{position:absolute;right:16px;bottom:12px;transform:rotate(-9deg);border:4px double var(--orange);color:var(--orange);
+    font-weight:bold;padding:5px 10px;border-radius:8px;text-align:center;font-size:.8rem;letter-spacing:.5px;background:rgba(255,255,255,.9);animation:thump .3s ease-out}
+  .env-stampmark{right:auto;left:auto;top:auto;bottom:16px;right:18px}
+  @keyframes thump{0%{transform:rotate(-9deg) scale(2.4);opacity:0}70%{transform:rotate(-9deg) scale(.92);opacity:1}100%{transform:rotate(-9deg) scale(1)}}
+
+  .question{margin-top:22px;background:#fff;border-radius:16px;padding:16px;border:3px solid var(--fl-hell);animation:up .35s ease-out}
+  .question h3{margin:0 0 12px;font-size:1.1rem;display:flex;gap:10px;align-items:flex-start}
+  .qnum{flex:0 0 30px;height:30px;border-radius:50%;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .choices{display:flex;gap:10px;flex-wrap:wrap}
+  .choices button{border:3px solid var(--fl);background:#fff;border-radius:14px;padding:12px 16px;font-size:1rem;font-weight:bold;cursor:pointer;
+    box-shadow:0 4px 0 var(--fl-hell);transition:transform .08s}
+  .choices button:hover:not(:disabled){background:#f4f4ff}
+  .choices button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--fl-hell)}
+  .choices.big button{flex:1;min-width:160px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 10px}
+  .choices.big .ico{font-size:2rem}
+  .choices button.ok{background:var(--ok);border-color:var(--ok);color:#fff;box-shadow:0 4px 0 #1f7442;animation:pulse .4s}
+  .choices button.no{background:#fff1ee;border-color:var(--bad);color:var(--bad);opacity:.75;animation:shake .4s}
+  @keyframes pulse{50%{transform:scale(1.07)}}
+  @keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+  .fb{margin-top:12px;padding:12px 14px;border-radius:12px;display:flex;gap:10px;align-items:flex-start}
+  .fb.ok{background:#e9f7ef;border-left:7px solid var(--ok)}
+  .fb.no{background:#fff1ee;border-left:7px solid var(--bad)}
+  .fb .emo{font-size:1.5rem;line-height:1}
+  .stamp-btn{display:flex;align-items:center;gap:12px;border:0;background:var(--orange);color:#fff;font-weight:bold;font-size:1.1rem;
+    border-radius:16px;padding:12px 22px;cursor:pointer;box-shadow:0 5px 0 var(--orange-d)}
+  .stamp-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--orange-d)}
+  .stamp-btn:disabled{opacity:.5}
+  .entry{background:#fffbea;border:2px dashed var(--orange);border-radius:12px;padding:12px 14px}
+
+  .side .box{background:#fff;border-radius:18px;padding:14px 16px;margin-bottom:14px;border:3px solid var(--fl-hell)}
+  .side h3{margin:0 0 8px;font-size:1.05rem}
+  .org{display:grid;gap:6px}
+  .org div{background:#f6f6ff;border-radius:10px;padding:7px 10px;font-size:.88rem}
+  .org b{display:block;color:var(--fl-dunkel)}
+
+  /* Spickzettel */
+  .overlay{position:fixed;inset:0;background:rgba(38,38,64,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+  .overlay.show{display:flex}
+  .note{background:#fff9c4;max-width:620px;width:100%;border-radius:6px;padding:26px 26px 20px;position:relative;
+    box-shadow:0 14px 30px rgba(0,0,0,.25);transform:rotate(-1deg);animation:up .3s ease-out;max-height:90vh;overflow:auto}
+  .note::before{content:"";position:absolute;top:-14px;left:50%;width:110px;height:28px;margin-left:-55px;background:rgba(158,158,255,.7);transform:rotate(2deg)}
+  .note h2{display:flex;gap:10px;align-items:center}
+  .law{background:#fff;border-left:7px solid var(--fl);padding:10px 14px;border-radius:8px;margin-bottom:12px}
+  .rules{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+  .rules li{background:#fff;border-radius:10px;padding:9px 12px;display:flex;gap:10px;align-items:flex-start}
+  .rules li span{font-size:1.3rem;line-height:1}
+  .close{position:absolute;right:12px;top:10px;border:0;background:var(--orange);color:#fff;border-radius:50%;width:36px;height:36px;font-size:1.2rem;cursor:pointer}
+
+  /* Ende */
+  .medal{text-align:center;margin:6px 0 14px}
+  .medal .m{font-size:4.5rem;animation:pulse 1s 2}
+  .stars{font-size:2rem;letter-spacing:4px}
+  .book{background:#fffdf4;border-radius:12px;padding:12px;border:2px solid #eadfba;overflow-x:auto}
+  .book h3{margin:4px 0 10px;font-family:Georgia,serif}
+  table{width:100%;border-collapse:collapse;font-size:.92rem}
+  th,td{border-bottom:1px solid #e6dcb8;padding:8px;text-align:left;vertical-align:top}
+  th{background:var(--fl-hell)}
+  canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <svg width="52" height="52" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="4" y="14" width="56" height="38" rx="6" fill="#fff"/>
+        <path d="M6 18 L32 38 L58 18" fill="none" stroke="#9E9EFF" stroke-width="4" stroke-linejoin="round"/>
+        <rect x="44" y="20" width="10" height="12" rx="1.5" fill="#FF9933"/>
+        <circle cx="52" cy="14" r="9" fill="#FF9933"/><text x="52" y="18.5" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff" font-family="Arial">!</text>
+      </svg>
+      <h1>Poststelle Büro King GmbH<small>Heute arbeitest du in der Poststelle.</small></h1>
+    </div>
+    <div class="top-actions">
+      <button class="pill" id="soundBtn" title="Ton an/aus">🔊</button>
+      <button class="pill orange" id="spickBtn">📌 Spickzettel Briefgeheimnis</button>
+    </div>
+  </div>
+
+  <!-- START -->
+  <div id="startView" class="panel">
+    <div class="hero">
+      <div>
+        <h2>Willkommen in der Poststelle! 👋</h2>
+        <p>Heute ist viel Post gekommen. Deine Aufgabe: Jeden Brief richtig bearbeiten – <b>öffnen oder nicht?</b> Ist alles drin? Stempeln. Und dann ab in die richtige Abteilung.</p>
+        <p>Für jede richtige Antwort im ersten Versuch bekommst du einen Punkt. Mehrere richtige Antworten hintereinander geben eine 🔥-Serie!</p>
+      </div>
+      <div style="text-align:center">
+        <svg viewBox="0 0 300 220" width="100%" style="max-width:320px" aria-hidden="true">
+          <ellipse cx="150" cy="200" rx="120" ry="12" fill="#9E9EFF" opacity=".25"/>
+          <path d="M40 120 h220 l-16 76 h-188 z" fill="#9E9EFF"/>
+          <rect x="70" y="60" width="150" height="90" rx="8" fill="#fffdf7" stroke="#e8e1cd" transform="rotate(-8 145 105)"/>
+          <rect x="85" y="48" width="150" height="90" rx="8" fill="#fffdf7" stroke="#e8e1cd" transform="rotate(5 160 93)"/>
+          <path d="M88 52 L160 100 L232 62" fill="none" stroke="#CCCCFF" stroke-width="5" transform="rotate(5 160 93)"/>
+          <rect x="205" y="58" width="20" height="24" rx="2" fill="#FF9933" transform="rotate(5 160 93)"/>
+          <rect x="60" y="80" width="150" height="90" rx="8" fill="#fffdf7" stroke="#e8e1cd"/>
+          <path d="M62 84 L135 128 L208 84" fill="none" stroke="#9E9EFF" stroke-width="5"/>
+          <rect x="180" y="90" width="20" height="24" rx="2" fill="#FF9933"/>
+          <path d="M40 120 h220 l-6 26 h-208 z" fill="#6c6cd9" opacity=".35"/>
+          <text x="150" y="182" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="18" fill="#fff">POSTEINGANG</text>
+        </svg>
+      </div>
+    </div>
+    <h3 style="margin-top:18px">Wähle deinen Postkorb:</h3>
+    <div class="korb-grid">
+      <div class="korb-card" data-korb="1">
+        <div style="font-size:2.4rem">📥</div>
+        <h3>Postkorb 1</h3><div class="meta">Eingang am 18.09.2025 · 10 Sendungen</div>
+      </div>
+      <div class="korb-card" data-korb="2">
+        <div style="font-size:2.4rem">📬</div>
+        <h3>Postkorb 2</h3><div class="meta">Eingang am 25.09.2025 · 6 Sendungen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARBEIT -->
+  <div id="workView" style="display:none">
+    <div class="panel" style="padding:16px 20px">
+      <div class="hud">
+        <div class="progress">
+          <div class="row" style="justify-content:space-between;margin-bottom:6px"><b id="korbTitle"></b><span id="countTxt"></span></div>
+          <div class="bar"><i id="barFill"></i></div>
+        </div>
+        <div class="chips"><span class="chip">⭐ Punkte: <b id="pts">0</b></span><span class="chip streak" id="streakChip">🔥 0</span></div>
+      </div>
+    </div>
+    <div class="layout">
+      <div class="panel" style="margin-top:0"><div class="desk" id="stage"></div></div>
+      <div class="side">
+        <div class="box">
+          <h3>🏢 Wer arbeitet wo?</h3>
+          <div class="org">
+            <div><b>Geschäftsleitung</b>Herr Dr. Frank Maier</div>
+            <div><b>Einkauf</b>Herr Emsig</div>
+            <div><b>Verkauf</b>Herr Martin Gewitzt, Herr Norman Sabitzer</div>
+            <div><b>Rechnungswesen (Rewe)</b>Rechnungen, Quittungen, Bankpost</div>
+            <div><b>Personalabteilung</b>Bewerbungen, Personalsachen</div>
+            <div><b>Lager und Versand</b>Herr Marius Scharf, Frau Melanie Grün</div>
+          </div>
+        </div>
+        <div class="box" style="background:#fff9c4;border-color:#f3e58a">
+          <h3>💡 Tipp</h3>
+          <p style="margin:0;font-size:.92rem">Steht der <b>Name vor der Firma</b> oder „persönlich“ drauf? → Brief bleibt <b>zu</b>!<br>Andere Firma als Empfänger? → <b>Irrläufer</b>.</p>
+          <p style="margin:8px 0 0"><button class="pill" style="box-shadow:none;border:2px solid var(--fl)" onclick="openSpick()">📌 Spickzettel öffnen</button></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENDE -->
+  <div id="endView" class="panel" style="display:none">
+    <div class="medal"><div class="m" id="medalIcon">🏆</div><h2 id="medalTitle"></h2><div class="stars" id="stars"></div>
+      <p id="endTxt"></p></div>
+    <div class="book"><h3>📒 Dein Posteingangsbuch</h3><div id="endBook"></div></div>
+    <div class="row" style="margin-top:18px;justify-content:center">
+      <button class="big-btn" id="again">🔁 Nochmal spielen</button>
+      <button class="big-btn lila" id="other">📥 Anderen Postkorb wählen</button>
+    </div>
+  </div>
+</div>
+
+<!-- SPICKZETTEL -->
+<div class="overlay" id="spick" role="dialog" aria-modal="true">
+  <div class="note">
+    <button class="close" onclick="closeSpick()" aria-label="Schließen">✕</button>
+    <h2>📌 Spickzettel: Briefgeheimnis</h2>
+    <div class="law"><b>Grundgesetz, Artikel 10 (1):</b><br>Das Briefgeheimnis sowie das Post- und Fernmeldegeheimnis sind unverletzlich.</div>
+    <ul class="rules">
+      <li><span>✉️</span><div><b>Briefe an die Firma</b> darf die Poststelle öffnen.</div></li>
+      <li><span>🔒</span><div>Steht <b>„persönlich“</b> oder <b>„vertraulich“</b> drauf, darf nur der Empfänger öffnen.</div></li>
+      <li><span>👤</span><div><b>Name vor der Firma</b> → persönlicher Brief → bleibt zu.</div></li>
+      <li><span>🏢</span><div><b>Firma vor dem Namen</b> → Geschäftspost → darf geöffnet werden.</div></li>
+      <li><span>↩️</span><div><b>Irrläufer</b> (an eine andere Firma) → nicht öffnen, zurück an die Post.</div></li>
+      <li><span>⚠️</span><div>Wer unbefugt Briefe öffnet, macht sich <b>strafbar</b>.</div></li>
+    </ul>
+    <p style="margin-bottom:0;font-size:.95rem">Meist bleiben auch Briefe an die <b>Geschäftsleitung</b>, die <b>Personalabteilung</b> und den <b>Betriebsrat</b> zu.</p>
+  </div>
+</div>
+
+<script>
+/* ---------- Spickzettel ---------- */
+const spick=document.getElementById('spick');
+function openSpick(){spick.classList.add('show');}
+function closeSpick(){spick.classList.remove('show');}
+document.getElementById('spickBtn').onclick=openSpick;
+spick.addEventListener('click',e=>{if(e.target===spick) closeSpick();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape') closeSpick();});
+
+/* ---------- Töne (WebAudio, nur nach Klick) ---------- */
+let soundOn=true, actx=null;
+document.getElementById('soundBtn').onclick=e=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?'🔊':'🔇';};
+function tone(freqs,dur=.12,type='sine',vol=.15){
+  if(!soundOn) return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    let t=actx.currentTime;
+    freqs.forEach(f=>{const o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=f;
+      g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+dur);t+=dur*.8;});
+  }catch(e){}
+}
+const sOk=()=>tone([660,880],.12,'triangle');
+const sNo=()=>tone([220,180],.14,'square',.06);
+const sStamp=()=>tone([90],.18,'sine',.4);
+const sWin=()=>tone([523,659,784,1046],.14,'triangle');
+
+/* ---------- Daten ---------- */
+const DEPTS=['Geschäftsleitung','Einkauf','Verkauf','Rechnungswesen','Personalabteilung','Lager und Versand'];
+const WHY={
+  firma:'Der Brief ist an die Firma adressiert. Die Poststelle darf ihn öffnen.',
+  firmaName:'Die Firma steht zuerst, der Name danach. Das ist Geschäftspost – du darfst öffnen.',
+  nameVor:'Der Name steht vor der Firma. Das ist persönliche Post – sie bleibt zu (Briefgeheimnis).',
+  persoenlich:'Der Vermerk „persönlich“ heißt: Nur der Empfänger selbst darf öffnen.',
+  irr:'Der Brief ist gar nicht an die Büro King GmbH adressiert. Irrläufer! Nicht öffnen, zurück an die Post.'
+};
+const KOERBE={
+ 1:{date:'18.09.2025', letters:[
+  {nr:'01', from:'Personalabteilung Büro King GmbH · Schillerstraße 8 · 34117 Kassel',
+   to:['<b>Herrn Marius Scharf – persönlich</b>','Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'closed', why:WHY.persoenlich, dept:'Lager und Versand', person:'Hr. Scharf',
+   deptWhy:'Herr Scharf arbeitet im Lager und Versand.', book:{abs:'Personalabteilung Büro King GmbH',bem:'Persönlich – ungeöffnet'}},
+  {nr:'02', from:'Saturn Electro Handels-GmbH · Königsplatz 61 · 34117 Kassel',
+   to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firma, subject:'Rechnung Nr. 3418/00',
+   inhalt:['Notebook Sony, 500,00 €','Vermerk: „Betrag dankend erhalten – Barzahlung“'],
+   dept:'Rechnungswesen', deptWhy:'Rechnungen und Quittungen gehören ins Rechnungswesen.', book:{abs:'Saturn Electro',bem:'Eingangsrechnung (bezahlt)'}},
+  {nr:'02', from:'SB Union · Heinrich-Hertz-Straße 29 · 34123 Kassel',
+   to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firma, subject:'Rechnung / Quittung',
+   inhalt:['Lebensmittel, diverse – 143,50 €','Vermerk: „Betrag dankend erhalten – Bankscheck“'],
+   dept:'Rechnungswesen', deptWhy:'Quittungen gehören ins Rechnungswesen.', book:{abs:'SB Union',bem:'Quittung'}},
+  {nr:'03', from:'Volksbank Kassel Göttingen · Ständeplatz 3 · 34117 Kassel',
+   to:['Bueroboss.de / Pfannkuch','Friedrich-Ebert-Straße 6','34117 Kassel'],
+   action:'return', why:WHY.irr, book:{abs:'Volksbank Kassel Göttingen',bem:'Irrläufer (Büroboss) – zurück'}},
+  {nr:'04', from:'Hanseatic-Bank · Postfach 2 02 02 · 20020 Hamburg',
+   to:['<b>Herrn Dr. Frank Maier</b>','Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'closed', why:WHY.nameVor+' Außerdem ist Herr Dr. Maier Geschäftsführer.', dept:'Geschäftsleitung', person:'Hr. Dr. Maier',
+   deptWhy:'Herr Dr. Maier ist in der Geschäftsleitung.', book:{abs:'Hanseatic-Bank',bem:'Persönlich – ungeöffnet'}},
+  {nr:'05', from:'NordBüro KG · Schiffgraben 12 · 30169 Hannover',
+   to:['Büro King GmbH','<b>Herrn Emsig</b>','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firmaName, subject:'Angebot Nr. 21016 – 50 Rollcontainer',
+   inhalt:['Angebot, Seite 1 von 2','Im Text steht: „Beachten Sie auch die Rabattstaffel in der Anlage!“'],
+   anlage:{frage:'Im Brief wird eine Rabattstaffel als Anlage angekündigt. Im Umschlag liegt nur Seite 1 von 2. Ist alles da?', complete:false,
+     why:'Die Rabattstaffel (Seite 2) fehlt. Das schreibst du ins Posteingangsbuch.'},
+   dept:'Einkauf', person:'Hr. Emsig', deptWhy:'Angebote von Lieferanten gehen an den Einkauf – hier an Herrn Emsig.', book:{abs:'NordBüro KG',bem:'Angebot – Anlage fehlt'}},
+  {nr:'06', from:'Kasseler Sparkasse · Wolfsschlucht 9 · 34117 Kassel',
+   to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firma, subject:'Informationen für Kunden – Onlinebanking',
+   inhalt:['Das Sicherheitsverfahren beim Online-Banking wird umgestellt.'],
+   dept:'Rechnungswesen', deptWhy:'Bankangelegenheiten betreffen das Rechnungswesen.', book:{abs:'Kasseler Sparkasse',bem:'Info Onlinebanking'}},
+  {nr:'07', from:'Werner KG · Mühlenstr. 20 · 31785 Hameln',
+   to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firma, subject:'Anfrage nach Kopierpapier Trend White',
+   inhalt:['Anfrage: 180 Pakete à 500 Blatt','Bitte um Liefertermin sowie Liefer- und Zahlungsbedingungen'],
+   dept:'Verkauf', deptWhy:'Ein Kunde fragt nach Ware – Anfragen bearbeitet der Verkauf.', book:{abs:'Werner KG',bem:'Anfrage'}},
+  {nr:'08', from:'Sommerfeld Bürosysteme GmbH · Postfach 12 34 · 45141 Essen',
+   to:['Büro King GmbH','<b>Herrn Martin Gewitzt</b>','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firmaName, subject:'Bestellung von Tintenstrahldruckern',
+   inhalt:['Bestellung: 10 Tintenstrahldrucker Desktop 150','Preis: 250,00 € je Stück'],
+   dept:'Verkauf', person:'Hr. Gewitzt', deptWhy:'Eine Kundenbestellung geht an den Verkauf – hier an Herrn Gewitzt.', book:{abs:'Sommerfeld Bürosysteme',bem:'Bestellung'}},
+  {nr:'09', from:'Claudia Aschenbrenner · Karlsbergerstr. 127 A · 34111 Kassel',
+   to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firma, subject:'Bewerbung als Abteilungsleiterin Verkauf/Marketing',
+   inhalt:['Anschreiben','Lebenslauf','Eine Übersicht über ihre Zeugnisse (keine Zeugniskopien)','Angekündigte Anlagen: Lebenslauf, Zeugnisse'],
+   anlage:{frage:'Angekündigt sind Lebenslauf und Zeugnisse. Ist die Bewerbung vollständig?', complete:false,
+     why:'Es liegt nur eine Übersicht bei – die Zeugnisse selbst fehlen. Das wird vermerkt.'},
+   dept:'Personalabteilung', deptWhy:'Bewerbungen bearbeitet die Personalabteilung.', book:{abs:'Claudia Aschenbrenner',bem:'Bewerbung – Zeugnisse fehlen'}}
+ ]},
+ 2:{date:'25.09.2025', letters:[
+  {nr:'01', from:'Brode GmbH · Müllerweg 3 · 31134 Hildesheim',
+   to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firma, subject:'Anfrage nach Rollcontainern',
+   inhalt:['Anfrage: 150 Rollcontainer, weiß, mindestens zwei Schubladen','Frage nach Liefer- und Zahlungsbedingungen'],
+   dept:'Verkauf', deptWhy:'Ein Kunde fragt nach Ware – Anfragen bearbeitet der Verkauf.', book:{abs:'Brode GmbH',bem:'Anfrage'}},
+  {nr:'02', from:'DEBECA Krankenversicherungsverein a. G. · Spohrstraße 8 · 34117 Kassel',
+   to:['<b>Frau Melanie Grün</b>','Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'closed', why:WHY.nameVor+' Absender ist eine private Krankenversicherung – also Privatpost.', dept:'Lager und Versand', person:'Fr. Grün',
+   deptWhy:'Frau Grün arbeitet im Lager und Versand.', book:{abs:'DEBECA KV',bem:'Privatpost – ungeöffnet'}},
+  {nr:'03', from:'Nordbüro KG · Schiffgraben 12 · 30169 Hannover',
+   to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firma, subject:'Reparaturangebot für die Druckmaschine',
+   inhalt:['Kosten ca.: Diagnose 50 €, Ersatzteile 80 €, Arbeitszeit 80 €, Lieferung 5 €','Dauer voraussichtlich 3 Wochen'],
+   dept:'Einkauf', alt:['Rechnungswesen'], deptWhy:'Ein Angebot eines Lieferanten geht an den Einkauf. (Auch Rewe ist okay, weil es um Kosten geht.)', book:{abs:'Nordbüro KG',bem:'Reparaturangebot'}},
+  {nr:'04', from:'Weller & Fritze OHG · Kölner Str. 45 · 34117 Kassel',
+   to:['Bürofix OHG','Friedrich-Schiller-Str. 16','34212 Kassel'],
+   action:'return', why:WHY.irr, book:{abs:'Weller & Fritze OHG',bem:'Irrläufer (Bürofix) – zurück'}},
+  {nr:'05', from:'Schneider Büroeinrichtungen · Schlossstraße 15 · 70184 Stuttgart',
+   to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
+   action:'open', why:WHY.firma, subject:'Einladung zur Hausmesse am 20.02.2026',
+   inhalt:['Einladung zum Messestand, Sortiment „Gesundes Arbeiten“','Flyer Büromesse','Angekündigte Anlage: Flyer Büromesse'],
+   anlage:{frage:'Angekündigt ist ein Flyer zur Büromesse. Ist alles da?', complete:true,
+     why:'Der Flyer liegt bei – alles vollständig.'},
+   dept:'Einkauf', deptWhy:'Ein Lieferant zeigt neue Produkte – das ist interessant für den Einkauf.', book:{abs:'Schneider Büroeinrichtungen',bem:'Messeeinladung'}},
+  {nr:'06', from:'Hauspost · Büro King GmbH · Geschäftsführung',
+   to:['<b>Herrn Norman Sabitzer – persönlich</b>','Abteilung Verkauf','– Hauspost –'],
+   action:'closed', why:WHY.persoenlich+' Das gilt auch für interne Post.', dept:'Verkauf', person:'Hr. Sabitzer',
+   deptWhy:'Herr Sabitzer arbeitet im Verkauf.', book:{abs:'Büro King GmbH (intern)',bem:'Interne Post, persönlich – ungeöffnet'}}
+ ]}
+};
+
+/* ---------- Spiel ---------- */
+let K=null, korbNr=0, idx=0, pts=0, maxPts=0, streak=0, bestStreak=0, book=[], qCount=0, scanMode=false, letterPts=0;
+const $=id=>document.getElementById(id);
+const stage=$('stage');
+const STAMP_SVG=`<svg width="44" height="52" viewBox="0 0 44 52" aria-hidden="true"><path d="M2 2h40v48H2z" fill="#fff" stroke="#D1D1D1" stroke-width="2" stroke-dasharray="3 3"/><rect x="7" y="7" width="30" height="38" fill="#CCCCFF"/><circle cx="22" cy="22" r="9" fill="#FF9933"/><text x="22" y="41" font-size="8" text-anchor="middle" fill="#262640" font-family="Arial" font-weight="bold">0,95</text></svg>`;
+const POSTMARK=`<svg width="70" height="40" viewBox="0 0 70 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="none" stroke="#6c6cd9" stroke-width="2"/><path d="M38 12q8-5 16 0t16 0M38 20q8-5 16 0t16 0M38 28q8-5 16 0t16 0" fill="none" stroke="#6c6cd9" stroke-width="2"/></svg>`;
+
+document.querySelectorAll('[data-korb]').forEach(c=>c.onclick=()=>startKorb(+c.dataset.korb));
+$('again').onclick=()=>{ if(scanMode){ if(confirmReset()) { clearStore(korbNr); endKorb(); } } else startKorb(korbNr); };
+$('other').onclick=()=>{ scanMode=false; history.replaceState(null,'',location.pathname+location.search); show('startView'); };
+
+function show(v){['startView','workView','endView'].forEach(x=>$(x).style.display=x===v?'':'none');window.scrollTo({top:0,behavior:'smooth'});}
+function startKorb(n){
+  scanMode=false; korbNr=n; K=KOERBE[n]; idx=0; pts=0; streak=0; bestStreak=0; book=[];
+  maxPts=K.letters.reduce((s,l)=>s+1+(l.anlage?1:0)+(l.action==='return'?0:1),0);
+  $('korbTitle').textContent=`Postkorb ${n} · Eingang ${K.date}`;
+  show('workView'); updateHud(); showLetter();
+}
+function updateHud(){
+  $('pts').textContent=pts;
+  $('streakChip').textContent=`🔥 ${streak}`;
+  if(scanMode){
+    const done=Object.keys(loadStore(korbNr)).length;
+    $('countTxt').textContent=`Bearbeitet: ${done} von ${K.letters.length} Umschlägen`;
+    $('barFill').style.width=(done/K.letters.length*100)+'%';
+  } else {
+    $('countTxt').textContent=`Brief ${Math.min(idx+1,K.letters.length)} von ${K.letters.length}`;
+    $('barFill').style.width=(idx/K.letters.length*100)+'%';
+  }
+}
+function showLetter(){
+  qCount=0; letterPts=0; updateHud();
+  const l=K.letters[idx];
+  stage.innerHTML=`<div class="envelope" id="env">
+      <div class="env-stamp">${STAMP_SVG}</div><div class="postmark">${POSTMARK}</div>
+      <div class="env-from">${l.from}</div>
+      <div class="env-to">${l.to.join('<br>')}</div>
+      <div class="env-label">✉️ Sendung ${l.nr}</div>
+    </div><div id="flow"></div>`;
+  askChoice({
+    title:'Lies das Anschriftfeld genau. Was machst du mit diesem Brief?', big:true,
+    options:[['open','<span class="ico">✂️</span>Öffnen'],['closed','<span class="ico">🔒</span>Ungeöffnet weitergeben'],['return','<span class="ico">↩️</span>Zurück an die Post']],
+    correct:[l.action], okText:l.why,
+    noText:'Schau noch mal hin: An wen ist der Brief adressiert? Steht der Name vor der Firma?',
+    onDone:()=>{
+      if(l.action==='return'){ $('env').classList.add('closed-away'); setTimeout(()=>finishLetter(l),350); }
+      else if(l.action==='closed') stepDept(l,true);
+      else stepOpen(l);
+    }
+  });
+}
+function askChoice({title,options,correct,okText,noText,onDone,big}){
+  qCount++;
+  const flow=$('flow');
+  const q=document.createElement('div'); q.className='question';
+  q.innerHTML=`<h3><span class="qnum">${qCount}</span><span>${title}</span></h3><div class="choices${big?' big':''}"></div><div class="fbx"></div>`;
+  flow.appendChild(q);
+  const box=q.querySelector('.choices'), fb=q.querySelector('.fbx');
+  let tries=0;
+  options.forEach(([val,label])=>{
+    const b=document.createElement('button'); b.innerHTML=label;
+    b.onclick=()=>{
+      tries++;
+      if(correct.includes(val)){
+        if(tries===1){pts++;letterPts++;streak++;bestStreak=Math.max(bestStreak,streak);}
+        sOk(); updateHud();
+        b.classList.add('ok');
+        box.querySelectorAll('button').forEach(x=>x.disabled=true);
+        const praise=tries===1?(streak>=3?`🔥 ${streak} in Folge!`:'Richtig!'):'Jetzt stimmt’s!';
+        fb.innerHTML=`<div class="fb ok"><span class="emo">✅</span><div><b>${praise}</b> ${okText}</div></div>`;
+        setTimeout(onDone,450);
+      } else {
+        streak=0; sNo(); updateHud();
+        b.classList.add('no'); b.disabled=true;
+        fb.innerHTML=`<div class="fb no"><span class="emo">🤔</span><div><b>Noch nicht.</b> ${noText}</div></div>`;
+      }
+    };
+    box.appendChild(b);
+  });
+  setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'center'}),80);
+}
+function stepOpen(l){
+  const d=document.createElement('div'); d.className='letter'; d.id='letter';
+  d.innerHTML=`<h4>📄 ${l.subject}</h4><div><b>Im Umschlag:</b></div><ul>${l.inhalt.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+  $('flow').appendChild(d);
+  if(l.anlage){
+    askChoice({
+      title:'Anlagen prüfen: '+l.anlage.frage,
+      options:[['ja','👍 Ja, alles da'],['nein','👎 Nein, es fehlt etwas']],
+      correct:[l.anlage.complete?'ja':'nein'], okText:l.anlage.why,
+      noText:'Vergleiche: Was wird im Brief angekündigt – und was liegt wirklich im Umschlag?',
+      onDone:()=>stepStamp(l,'letter')
+    });
+  } else stepStamp(l,'letter');
+}
+function stepStamp(l,target){
+  qCount++;
+  const q=document.createElement('div'); q.className='question';
+  q.innerHTML=`<h3><span class="qnum">${qCount}</span><span>Eingangsstempel drauf!</span></h3><button class="stamp-btn">🖐️ Stempeln</button>`;
+  $('flow').appendChild(q);
+  q.querySelector('button').onclick=e=>{
+    e.currentTarget.disabled=true; sStamp();
+    const s=document.createElement('div'); s.className='stamp';
+    s.innerHTML=`EINGEGANGEN<br>${K.date}<br>Büro King GmbH`;
+    $(target).appendChild(s);
+    setTimeout(()=>stepDept(l,false),600);
+  };
+  setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'center'}),80);
+}
+function stepDept(l,closed){
+  askChoice({
+    title: closed?'Der Brief bleibt zu. In welche Abteilung bringst du ihn?':'An welche Abteilung geht der Brief?',
+    options:DEPTS.map(d=>[d,d]),
+    correct:[l.dept].concat(l.alt||[]), okText:l.deptWhy,
+    noText:'Schau in die Liste „Wer arbeitet wo?“. Wer kümmert sich um so etwas?',
+    onDone:()=>finishLetter(l)
+  });
+}
+function finishLetter(l){
+  const an = l.action==='return' ? '–' : (l.person ? `${l.dept} (${l.person})` : l.dept);
+  const entry={datum:K.date, abs:l.book.abs, an, bem:l.book.bem, nr:l.nr};
+  if(scanMode){ finishScan(l,entry,an); return; }
+  book.push(entry);
+  const last=idx===K.letters.length-1;
+  const d=document.createElement('div'); d.className='question';
+  d.innerHTML=`<div class="entry">📒 <b>Eingetragen ins Posteingangsbuch:</b><br>${l.book.abs} → ${an} · <i>${l.book.bem}</i></div>
+    <p style="margin:14px 0 0;text-align:center"><button class="big-btn">${last?'🏁 Postkorb abschließen':'Nächster Brief ➜'}</button></p>`;
+  $('flow').appendChild(d);
+  d.querySelector('button').onclick=()=>{ idx++; if(idx<K.letters.length){ showLetter(); window.scrollTo({top:0,behavior:'smooth'}); } else endKorb(); };
+  setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'center'}),80);
+}
+function endKorb(){
+  if(scanMode){
+    const st=loadStore(korbNr), keys=Object.keys(st).map(Number).sort((a,b)=>a-b);
+    book=keys.map(k=>st[k].entry); pts=keys.reduce((s,k)=>s+st[k].pts,0); maxPts=keys.reduce((s,k)=>s+st[k].max,0);
+    $('again').textContent='🗑️ Posteingangsbuch leeren'; $('other').textContent='🏠 Zur Startseite';
+    if(keys.length<K.letters.length){
+      show('endView');
+      $('medalIcon').textContent='📒'; $('medalTitle').textContent=`Postkorb ${korbNr}: ${keys.length} von ${K.letters.length} Umschlägen bearbeitet`;
+      $('stars').textContent=''; 
+      const missing=K.letters.map((l,i)=>st[i]?null:l.nr).filter(Boolean);
+      $('endTxt').innerHTML=`Bisher <b>${pts} von ${maxPts}</b> Punkten. Noch offen: Sendung <b>${missing.join(', ')}</b>.`;
+      renderBook(); return;
+    }
+  } else { $('again').textContent='🔁 Nochmal spielen'; $('other').textContent='📥 Anderen Postkorb wählen'; }
+  show('endView');
+  const q=pts/maxPts;
+  const [icon,title,st]= q>=.9?['🏆','Poststellen-Profi!',3]: q>=.7?['🥈','Starke Leistung!',2]: q>=.5?['🥉','Gut gemacht!',1]:['📮','Geschafft – übe noch ein bisschen!',0];
+  $('medalIcon').textContent=icon;
+  $('medalTitle').textContent=title;
+  $('stars').textContent='★'.repeat(st)+'☆'.repeat(3-st);
+  $('stars').style.color='var(--orange)';
+  $('endTxt').innerHTML=`Du hast <b>${pts} von ${maxPts}</b> Punkten erreicht. Deine längste Serie: <b>🔥 ${bestStreak}</b>.`;
+  renderBook();
+  sWin(); if(q>=.5) confetti();
+}
+function renderBook(){
+  $('endBook').innerHTML=book.length?`<table><thead><tr><th>Datum Eingang</th><th>Absender</th><th>Empfänger / weitergeleitet an</th><th>Bemerkungen / ungeöffnet</th><th>Nr.</th></tr></thead><tbody>
+    ${book.map(b=>`<tr><td>${b.datum}</td><td>${b.abs}</td><td>${b.an}</td><td>${b.bem}</td><td>${b.nr}</td></tr>`).join('')}</tbody></table>`:'<p>Noch keine Einträge.</p>';
+}
+
+/* ---------- Scan-Modus: jeder Umschlag hat einen eigenen Link (#k1-5 = Postkorb 1, Umschlag 5) ---------- */
+function storeKey(n){return 'posteingang-buch-k'+n;}
+function loadStore(n){try{return JSON.parse(localStorage.getItem(storeKey(n))||'{}');}catch(e){return memStore[n]||{};}}
+const memStore={};
+function saveStore(n,obj){memStore[n]=obj;try{localStorage.setItem(storeKey(n),JSON.stringify(obj));}catch(e){}}
+function clearStore(n){memStore[n]={};try{localStorage.removeItem(storeKey(n));}catch(e){}}
+function confirmReset(){
+  const b=$('again');
+  if(b.dataset.sure==='1'){ b.dataset.sure=''; return true; }
+  b.dataset.sure='1'; b.textContent='⚠️ Wirklich alles löschen? Nochmal klicken';
+  setTimeout(()=>{ if(b.dataset.sure==='1'){ b.dataset.sure=''; b.textContent='🗑️ Posteingangsbuch leeren'; } },4000);
+  return false;
+}
+function finishScan(l,entry,an){
+  const st=loadStore(korbNr);
+  st[idx]={entry,pts:letterPts,max:1+(l.anlage?1:0)+(l.action==='return'?0:1)};
+  saveStore(korbNr,st); updateHud();
+  const done=Object.keys(st).length, all=done>=K.letters.length;
+  const d=document.createElement('div'); d.className='question';
+  d.innerHTML=`<div class="entry">📒 <b>Eingetragen ins Posteingangsbuch:</b><br>${l.book.abs} → ${an} · <i>${l.book.bem}</i></div>
+    <p style="margin:14px 0 6px;text-align:center;font-weight:bold">${all?'🎉 Alle Umschläge bearbeitet!':'📷 Leg den Umschlag weg und scanne den nächsten.'}</p>
+    <p style="margin:0;text-align:center"><button class="big-btn">${all?'🏁 Ergebnis ansehen':'📒 Posteingangsbuch ansehen'}</button></p>`;
+  $('flow').appendChild(d);
+  d.querySelector('button').onclick=()=>endKorb();
+  if(all) sWin();
+  setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'center'}),80);
+}
+function route(){
+  const m=/^#k([12])-(\d{1,2})$/.exec(location.hash);
+  if(!m) return;
+  const n=+m[1], i=+m[2]-1;
+  if(!KOERBE[n]||i<0||i>=KOERBE[n].letters.length) return;
+  scanMode=true; korbNr=n; K=KOERBE[n]; idx=i; pts=0; streak=0; bestStreak=0;
+  $('korbTitle').textContent=`Postkorb ${n} · Eingang ${K.date}`;
+  show('workView'); showLetter();
+}
+window.addEventListener('hashchange',route);
+route();
+
+/* ---------- Konfetti ---------- */
+function confetti(){
+  const c=$('confetti'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+  const cols=['#CCCCFF','#9E9EFF','#FF9933','#D1D1D1','#6c6cd9'];
+  const P=Array.from({length:140},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,r:5+Math.random()*6,
+    vx:-2+Math.random()*4,vy:2+Math.random()*4,a:Math.random()*6,va:-.2+Math.random()*.4,col:cols[Math.random()*cols.length|0]}));
+  let f=0;(function draw(){x.clearRect(0,0,c.width,c.height);
+    P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.col;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore();});
+    if(++f<220) requestAnimationFrame(draw); else x.clearRect(0,0,c.width,c.height);})();
+}
+</script>
+</body>
+</html>
