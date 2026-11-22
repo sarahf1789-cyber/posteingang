@@ -258,6 +258,7 @@
             <div><b>Personalabteilung</b>Es geht um Mitarbeiter: Bewerbungen, Zeugnisse, Lohn</div>
             <div><b>Lager und Versand</b><span class="who">Herr Scharf, Frau Grün</span>Ware kommt an oder geht raus: Lieferscheine, Versandpapiere</div>
           </div>
+        </div>
         <div class="box" style="background:#fff9c4;border-color:#f3e58a">
           <h3>💡 Tipp</h3>
           <p style="margin:0;font-size:.92rem">Steht der <b>Name vor der Firma</b> oder „persönlich“ drauf? → Brief bleibt <b>zu</b>!<br>Andere Firma als Empfänger? → <b>Irrläufer</b>.</p>
@@ -650,16 +651,16 @@ function endKorb(){
   if(scanMode){
     const st=loadStore(korbNr), keys=Object.keys(st).map(Number).sort((a,b)=>a-b);
     book=keys.map(k=>st[k].entry); pts=keys.reduce((s,k)=>s+st[k].pts,0); maxPts=keys.reduce((s,k)=>s+st[k].max,0);
-    $('again').textContent='🗑️ Posteingangsbuch leeren'; $('other').textContent='🏠 Zur Startseite';
+    $('again').textContent='Fortschritt zurücksetzen'; $('again').className='big-btn lila'; $('again').style.cssText='background:#fff;color:var(--ink);box-shadow:none;border:2px solid var(--grau);font-size:.9rem;padding:8px 14px'; $('other').textContent='🏠 Zur Startseite';
     if(keys.length<K.letters.length){
       show('endView');
       $('medalIcon').textContent='📒'; $('medalTitle').textContent=`Postkorb ${korbNr}: ${keys.length} von ${K.letters.length} Umschlägen bearbeitet`;
       $('stars').textContent=''; 
       const missing=K.letters.map((l,i)=>st[i]?null:l.nr).filter(Boolean);
-      $('endTxt').innerHTML=`Bisher <b>${pts} von ${maxPts}</b> Punkten. Noch offen: Sendung <b>${missing.join(', ')}</b>.`;
+      $('endTxt').innerHTML=`Bisher <b>${pts} von ${maxPts}</b> Punkten. Noch offen: Sendung <b>${missing.join(', ')}</b>.<br><br>📷 <b>Weiter geht’s:</b> Nehmt den nächsten Umschlag und scannt den QR-Code mit der Kamera.`;
       renderBook(); return;
     }
-  } else { $('again').textContent='🔁 Nochmal spielen'; $('other').textContent='📥 Anderen Postkorb wählen'; }
+  } else { $('again').textContent='🔁 Nochmal spielen'; $('again').className='big-btn'; $('again').style.cssText=''; $('other').textContent='📥 Anderen Postkorb wählen'; }
   show('endView');
   const q=pts/maxPts;
   const [icon,title,st]= q>=.9?['🏆','Poststellen-Profi!',3]: q>=.7?['🥈','Starke Leistung!',2]: q>=.5?['🥉','Gut gemacht!',1]:['📮','Geschafft – übe noch ein bisschen!',0];
@@ -685,8 +686,8 @@ function clearStore(n){memStore[n]={};try{localStorage.removeItem(storeKey(n));}
 function confirmReset(){
   const b=$('again');
   if(b.dataset.sure==='1'){ b.dataset.sure=''; return true; }
-  b.dataset.sure='1'; b.textContent='⚠️ Wirklich alles löschen? Nochmal klicken';
-  setTimeout(()=>{ if(b.dataset.sure==='1'){ b.dataset.sure=''; b.textContent='🗑️ Posteingangsbuch leeren'; } },4000);
+  b.dataset.sure='1'; b.textContent='⚠️ Wirklich alles löschen? Nochmal tippen';
+  setTimeout(()=>{ if(b.dataset.sure==='1'){ b.dataset.sure=''; b.textContent='Fortschritt zurücksetzen'; } },4000);
   return false;
 }
 function finishScan(l,entry,an){
