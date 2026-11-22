@@ -157,6 +157,13 @@
   table{width:100%;border-collapse:collapse;font-size:.92rem}
   th,td{border-bottom:1px solid #e6dcb8;padding:8px;text-align:left;vertical-align:top}
   th{background:var(--fl-hell)}
+  .stopov{background:rgba(120,10,10,.55);z-index:70}
+  .stopcard{background:#fff;border:8px solid var(--bad);border-radius:24px;max-width:520px;width:100%;padding:26px 28px;text-align:center;animation:stopin .45s cubic-bezier(.2,1.6,.4,1)}
+  .stophand{font-size:4rem;line-height:1}
+  .stoptitle{font-size:3rem;font-weight:bold;color:var(--bad);letter-spacing:3px;margin:4px 0 10px}
+  .stopcard p{font-size:1.08rem;margin:0 0 10px}
+  .stoplaw{background:#fff1ee;border-radius:10px;padding:8px 10px;font-size:.98rem!important}
+  @keyframes stopin{0%{transform:scale(.3) rotate(-8deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
   canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 </style>
@@ -426,6 +433,40 @@ const BRIEFE={
 const briefOf=()=>BRIEFE[`${korbNr}-${idx}`];
 function ptsFor(l,i){ const b=BRIEFE[`${korbNr}-${i}`]; if(l.action==='return') return 1; if(l.action==='closed') return 2; return 3+(b&&b.anlagen?1:0); }
 
+/* ---------- Inhalte der Briefe, die NICHT geöffnet werden dürfen ---------- */
+const PEEK={
+ '1-0':{kopf:'Personalabteilung Büro King GmbH', betreff:'Verdienstabrechnung – streng vertraulich', text:['Name: Marius Scharf, Abt. Lager und Versand','Gehalt (Monat): 2.600,00 €','Lohnsteuer: 231,33 €','Auszahlungsbetrag: 1.809,99 €'], stop:'Du hast gerade die <b>Lohnabrechnung von Herrn Scharf</b> gelesen – mit seinem Gehalt!'},
+ '1-3':{kopf:'Volksbank Kassel Göttingen', betreff:'Informationen für Kunden', text:['Dieser Brief ist für Bueroboss.de / Pfannkuch bestimmt.','Er hat mit der Büro King GmbH überhaupt nichts zu tun.'], stop:'Dieser Brief war <b>gar nicht für eure Firma</b>! Ein Irrläufer wird nicht geöffnet, sondern geht zurück an die Post.', irr:true},
+ '1-4':{kopf:'Hanseatic-Bank, Hamburg', betreff:'Kündigung Ihres Darlehens', text:['Sehr geehrter Herr Maier,','es ist uns unbegreiflich, dass Sie bis heute nicht auf unsere Schreiben reagiert haben. Wir kündigen das Darlehen Nr. 200/326.139 mit dem Restbetrag von 25.000,00 €.','Ohne vollständige Rückzahlung leiten wir gerichtliche Zwangsmaßnahmen ein.'], stop:'Du hast gerade gelesen, dass <b>Herr Dr. Maier Schulden bei seiner Bank</b> hat. Das geht niemanden in der Firma etwas an!'},
+ '2-1':{kopf:'DEBECA Private Krankenversicherung', betreff:'Ihr Antrag', text:['Sehr geehrte Frau Grün,','nach umfassender Prüfung Ihres Antrags müssen wir Ihnen leider mitteilen, dass wir Ihnen unseren Versicherungsschutz nicht anbieten können.'], stop:'Du hast gerade <b>Frau Grüns private Post von ihrer Krankenversicherung</b> gelesen. Das ist ihre Privatsache!'},
+ '2-3':{kopf:'Weller & Fritze OHG', betreff:'Achtung!!', text:['Ich bin ein Irrläufer. Der Postbote hat wohl einen Fehler gemacht und mich falsch zugestellt!','Wenn man die Adresse richtig liest, merkt man das und öffnet diesen Brief gar nicht erst!'], stop:'Dieser Brief war <b>für die Bürofix OHG</b>, nicht für euch! Ein Irrläufer wird nicht geöffnet, sondern geht zurück an die Post.', irr:true},
+ '2-5':{kopf:'Büro King GmbH – Geschäftsführung', betreff:'Zeugnis', text:['Herr Norman Sabitzer ist seit dem 01. November 2015 in unserem Hause beschäftigt. …','Herr Sabitzer verlässt unser Unternehmen auf eigenen Wunsch. Wir danken ihm für die geleistete Arbeit.'], stop:'Du hast gerade gelesen, dass <b>Herr Sabitzer kündigt</b> – das weiß vielleicht noch nicht einmal sein Team!'}
+};
+const sStop=()=>tone([440,330,220],.22,'sawtooth',.08);
+function showPeek(p,box,done){
+  box.querySelectorAll('button').forEach(x=>x.disabled=true);
+  const d=document.createElement('div'); d.className='letter brief'; d.id='peek';
+  d.innerHTML=`<div class="kopf">${p.kopf}</div><div class="betreff">${p.betreff}</div>${p.text.map(t=>`<p>${t}</p>`).join('')}`;
+  $('env').after(d);
+  d.scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(()=>{
+    sStop();
+    const o=document.createElement('div'); o.className='overlay show stopov';
+    o.innerHTML=`<div class="stopcard"><div class="stophand">✋</div><div class="stoptitle">STOPP!</div>
+      <p>${p.stop}</p>
+      <p class="stoplaw">${p.irr?'Fremde Post öffnen ist eine Verletzung des Briefgeheimnisses.':'Das ist eine Verletzung des Briefgeheimnisses und kann bestraft werden (§ 202 StGB).'}</p>
+      <p>Schaut noch mal genau auf das Anschriftfeld!</p>
+      <button class="big-btn">✉️ Brief wieder zumachen</button></div>`;
+    document.body.appendChild(o);
+    o.querySelector('button').onclick=()=>{
+      o.remove(); d.remove();
+      box.querySelectorAll('button').forEach(x=>{ if(!x.classList.contains('no')) x.disabled=false; });
+      done();
+      $('env').scrollIntoView({behavior:'smooth',block:'center'});
+    };
+  },3500);
+}
+
 const HELP_DEPT=`<details class="help"><summary>💡 Tipp: So findest du die richtige Abteilung</summary><ol>
 <li><b>Ist der Brief persönlich?</b> Dann bekommt ihn die Person – schau, in welcher Abteilung sie arbeitet.</li>
 <li><b>Geht es um Geld?</b> Rechnung, Quittung, Bank → <b>Rechnungswesen</b></li>
@@ -478,6 +519,7 @@ function showLetter(){
     options:[['open','<span class="ico">✂️</span>Öffnen'],['closed','<span class="ico">🔒</span>Ungeöffnet weitergeben'],['return','<span class="ico">↩️</span>Zurück an die Post']],
     correct:[l.action], okText:l.why,
     noText:'Schau noch mal hin: An wen ist der Brief adressiert? Steht der Name vor der Firma?',
+    onWrong:(val,box,done)=>{ const p=PEEK[`${korbNr}-${idx}`]; if(val!=='open'||!p) return false; showPeek(p,box,done); return true; },
     onDone:()=>{
       if(l.action==='return'){ $('env').classList.add('closed-away'); setTimeout(()=>finishLetter(l),350); }
       else if(l.action==='closed') stepDept(l,true);
@@ -485,7 +527,7 @@ function showLetter(){
     }
   });
 }
-function askChoice({title,options,correct,okText,noText,onDone,big,help}){
+function askChoice({title,options,correct,okText,noText,onDone,big,help,onWrong}){
   qCount++;
   const flow=$('flow');
   const q=document.createElement('div'); q.className='question';
@@ -506,9 +548,12 @@ function askChoice({title,options,correct,okText,noText,onDone,big,help}){
         fb.innerHTML=`<div class="fb ok"><span class="emo">✅</span><div><b>${praise}</b> ${okText}</div></div>`;
         setTimeout(onDone,450);
       } else {
-        streak=0; sNo(); updateHud();
-        b.classList.add('no'); b.disabled=true;
-        fb.innerHTML=`<div class="fb no"><span class="emo">🤔</span><div><b>Noch nicht.</b> ${noText}</div></div>`;
+        const markWrong=()=>{ streak=0; sNo(); updateHud();
+          b.classList.add('no'); b.disabled=true;
+          fb.innerHTML=`<div class="fb no"><span class="emo">🤔</span><div><b>Noch nicht.</b> ${noText}</div></div>`; };
+        streak=0; updateHud();
+        if(onWrong && onWrong(val, box, markWrong)) return;
+        markWrong();
       }
     };
     box.appendChild(b);
