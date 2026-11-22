@@ -78,6 +78,22 @@
     box-shadow:0 6px 14px rgba(0,0,0,.12);border-top:8px solid var(--fl);animation:up .5s ease-out}
   @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
   .letter h4{margin:0 0 8px;font-size:1.15rem}
+  .brief{font-family:Arial,Helvetica,sans-serif;font-size:.95rem;line-height:1.5}
+  .brief .kopf{font-weight:bold;color:var(--fl-dunkel);font-size:1.05rem;border-bottom:2px solid var(--fl-hell);padding-bottom:4px;margin-bottom:12px}
+  .brief .betreff{font-weight:bold;margin:8px 0 10px}
+  .brief p{margin:0 0 8px}
+  .brief .anl{margin-top:12px;font-size:.9rem}
+  .brief .anl b{background:#fff2c8;padding:0 3px;border-radius:3px}
+  .umschlag{margin:14px auto 0;max-width:560px;background:#f7f4ea;border:2px dashed #d8cfb4;border-radius:12px;padding:12px 14px}
+  .umschlag .lbl{font-weight:bold;margin-bottom:8px}
+  .papers{display:flex;gap:10px;flex-wrap:wrap}
+  .paper{background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 2px 4px rgba(0,0,0,.08);padding:10px 12px;min-width:120px;max-width:200px;font-size:.88rem;text-align:center}
+  .paper .ic{font-size:1.6rem;display:block}
+  .anlrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 10px;border-radius:10px;background:#f6f6ff;margin-bottom:8px}
+  .anlrow .nm{flex:1;min-width:140px;font-weight:bold}
+  .anlrow button{border:3px solid var(--fl);background:#fff;border-radius:10px;padding:8px 12px;font-weight:bold;font-size:.95rem;cursor:pointer}
+  .anlrow button.sel{background:var(--fl);color:#fff}
+  .anlrow.ok{background:#e9f7ef} .anlrow.no{background:#fff1ee}
   .letter ul{margin:6px 0 0;padding-left:22px}
   .stamp{position:absolute;right:16px;bottom:12px;transform:rotate(-9deg);border:4px double var(--orange);color:var(--orange);
     font-weight:bold;padding:5px 10px;border-radius:8px;text-align:center;font-size:.8rem;letter-spacing:.5px;background:rgba(255,255,255,.9);animation:thump .3s ease-out}
@@ -113,6 +129,11 @@
   .org{display:grid;gap:6px}
   .org div{background:#f6f6ff;border-radius:10px;padding:7px 10px;font-size:.88rem}
   .org b{display:block;color:var(--fl-dunkel)}
+  .org .who{display:block;font-style:italic;color:#555;margin-bottom:2px}
+  details.help{margin:0 0 12px;background:#fff9c4;border-radius:12px;padding:8px 12px}
+  details.help summary{cursor:pointer;font-weight:bold}
+  details.help ol{margin:8px 0 2px;padding-left:22px}
+  details.help li{margin-bottom:4px}
 
   /* Spickzettel */
   .overlay{position:fixed;inset:0;background:rgba(38,38,64,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
@@ -187,11 +208,11 @@
     <div class="korb-grid">
       <div class="korb-card" data-korb="1">
         <div style="font-size:2.4rem">📥</div>
-        <h3>Postkorb 1</h3><div class="meta">Eingang am 18.09.2025 · 10 Sendungen</div>
+        <h3>Postkorb 1</h3><div class="meta">Eingang am 24.11.2026 · 10 Sendungen</div>
       </div>
       <div class="korb-card" data-korb="2">
         <div style="font-size:2.4rem">📬</div>
-        <h3>Postkorb 2</h3><div class="meta">Eingang am 25.09.2025 · 6 Sendungen</div>
+        <h3>Postkorb 2</h3><div class="meta">Eingang am 01.12.2026 · 6 Sendungen</div>
       </div>
     </div>
   </div>
@@ -211,16 +232,15 @@
       <div class="panel" style="margin-top:0"><div class="desk" id="stage"></div></div>
       <div class="side">
         <div class="box">
-          <h3>🏢 Wer arbeitet wo?</h3>
+          <h3>🏢 Wer bearbeitet was?</h3>
           <div class="org">
-            <div><b>Geschäftsleitung</b>Herr Dr. Frank Maier</div>
-            <div><b>Einkauf</b>Herr Emsig</div>
-            <div><b>Verkauf</b>Herr Martin Gewitzt, Herr Norman Sabitzer</div>
-            <div><b>Rechnungswesen (Rewe)</b>Rechnungen, Quittungen, Bankpost</div>
-            <div><b>Personalabteilung</b>Bewerbungen, Personalsachen</div>
-            <div><b>Lager und Versand</b>Herr Marius Scharf, Frau Melanie Grün</div>
+            <div><b>Geschäftsleitung</b><span class="who">Herr Dr. Frank Maier</span>Persönliche Post an die Chefs, Kredite und Darlehen, wichtige Verträge</div>
+            <div><b>Einkauf</b><span class="who">Herr Emsig</span>Wir wollen etwas kaufen: Angebote und Messeeinladungen von Lieferanten</div>
+            <div><b>Verkauf</b><span class="who">Herr Gewitzt, Herr Sabitzer</span>Kunden wollen etwas von uns kaufen: Anfragen und Bestellungen</div>
+            <div><b>Rechnungswesen (Rewe)</b>Es geht um Geld: Rechnungen, Quittungen, Post von der Bank</div>
+            <div><b>Personalabteilung</b>Es geht um Mitarbeiter: Bewerbungen, Zeugnisse, Lohn</div>
+            <div><b>Lager und Versand</b><span class="who">Herr Scharf, Frau Grün</span>Ware kommt an oder geht raus: Lieferscheine, Versandpapiere</div>
           </div>
-        </div>
         <div class="box" style="background:#fff9c4;border-color:#f3e58a">
           <h3>💡 Tipp</h3>
           <p style="margin:0;font-size:.92rem">Steht der <b>Name vor der Firma</b> oder „persönlich“ drauf? → Brief bleibt <b>zu</b>!<br>Andere Firma als Empfänger? → <b>Irrläufer</b>.</p>
@@ -296,89 +316,114 @@ const WHY={
   irr:'Der Brief ist gar nicht an die Büro King GmbH adressiert. Irrläufer! Nicht öffnen, zurück an die Post.'
 };
 const KOERBE={
- 1:{date:'18.09.2025', letters:[
+ 1:{date:'24.11.2026', letters:[
   {nr:'01', from:'Personalabteilung Büro King GmbH · Schillerstraße 8 · 34117 Kassel',
    to:['<b>Herrn Marius Scharf – persönlich</b>','Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'closed', why:WHY.persoenlich, dept:'Lager und Versand', person:'Hr. Scharf',
-   deptWhy:'Herr Scharf arbeitet im Lager und Versand.', book:{abs:'Personalabteilung Büro King GmbH',bem:'Persönlich – ungeöffnet'}},
+   deptWhy:'Herr Scharf arbeitet im Lager und Versand.', book:{abs:'Personalabteilung Büro King GmbH',an:'M Scharf/Abt. Lager und Versand',bem:'Ungeöffnet an MA weiterleiten'}},
   {nr:'02', from:'Saturn Electro Handels-GmbH · Königsplatz 61 · 34117 Kassel',
    to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firma, subject:'Rechnung Nr. 3418/00',
    inhalt:['Notebook Sony, 500,00 €','Vermerk: „Betrag dankend erhalten – Barzahlung“'],
-   dept:'Rechnungswesen', deptWhy:'Rechnungen und Quittungen gehören ins Rechnungswesen.', book:{abs:'Saturn Electro',bem:'Eingangsrechnung (bezahlt)'}},
+   dept:'Rechnungswesen', deptWhy:'Rechnungen und Quittungen gehören ins Rechnungswesen.', book:{abs:'Saturn',an:'Rewe',bem:'Eingangsrechnung'}},
   {nr:'02', from:'SB Union · Heinrich-Hertz-Straße 29 · 34123 Kassel',
    to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firma, subject:'Rechnung / Quittung',
    inhalt:['Lebensmittel, diverse – 143,50 €','Vermerk: „Betrag dankend erhalten – Bankscheck“'],
-   dept:'Rechnungswesen', deptWhy:'Quittungen gehören ins Rechnungswesen.', book:{abs:'SB Union',bem:'Quittung'}},
+   dept:'Rechnungswesen', deptWhy:'Quittungen gehören ins Rechnungswesen.', book:{abs:'SB Union',an:'Rewe',bem:'Quittung'}},
   {nr:'03', from:'Volksbank Kassel Göttingen · Ständeplatz 3 · 34117 Kassel',
    to:['Bueroboss.de / Pfannkuch','Friedrich-Ebert-Straße 6','34117 Kassel'],
-   action:'return', why:WHY.irr, book:{abs:'Volksbank Kassel Göttingen',bem:'Irrläufer (Büroboss) – zurück'}},
+   action:'return', why:WHY.irr, book:{abs:'Irrläufer Büroboss',an:'',bem:'zurück'}},
   {nr:'04', from:'Hanseatic-Bank · Postfach 2 02 02 · 20020 Hamburg',
    to:['<b>Herrn Dr. Frank Maier</b>','Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'closed', why:WHY.nameVor+' Außerdem ist Herr Dr. Maier Geschäftsführer.', dept:'Geschäftsleitung', person:'Hr. Dr. Maier',
-   deptWhy:'Herr Dr. Maier ist in der Geschäftsleitung.', book:{abs:'Hanseatic-Bank',bem:'Persönlich – ungeöffnet'}},
+   deptWhy:'Herr Dr. Maier ist in der Geschäftsleitung.', book:{abs:'Hanseatic Bank',an:'Herr Dr. Maier Geschäftsleitung',bem:'Ungeöffnet'}},
   {nr:'05', from:'NordBüro KG · Schiffgraben 12 · 30169 Hannover',
    to:['Büro King GmbH','<b>Herrn Emsig</b>','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firmaName, subject:'Angebot Nr. 21016 – 50 Rollcontainer',
    inhalt:['Angebot, Seite 1 von 2','Im Text steht: „Beachten Sie auch die Rabattstaffel in der Anlage!“'],
    anlage:{frage:'Im Brief wird eine Rabattstaffel als Anlage angekündigt. Im Umschlag liegt nur Seite 1 von 2. Ist alles da?', complete:false,
      why:'Die Rabattstaffel (Seite 2) fehlt. Das schreibst du ins Posteingangsbuch.'},
-   dept:'Einkauf', person:'Hr. Emsig', deptWhy:'Angebote von Lieferanten gehen an den Einkauf – hier an Herrn Emsig.', book:{abs:'NordBüro KG',bem:'Angebot – Anlage fehlt'}},
+   dept:'Einkauf', person:'Hr. Emsig', deptWhy:'Angebote von Lieferanten gehen an den Einkauf – hier an Herrn Emsig.', book:{abs:'Nordbüro KG',an:'Herr Emsig/Einkauf',bem:'Angebot, Anlage fehlt'}},
   {nr:'06', from:'Kasseler Sparkasse · Wolfsschlucht 9 · 34117 Kassel',
    to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firma, subject:'Informationen für Kunden – Onlinebanking',
    inhalt:['Das Sicherheitsverfahren beim Online-Banking wird umgestellt.'],
-   dept:'Rechnungswesen', deptWhy:'Bankangelegenheiten betreffen das Rechnungswesen.', book:{abs:'Kasseler Sparkasse',bem:'Info Onlinebanking'}},
+   dept:'Rechnungswesen', deptWhy:'Bankangelegenheiten betreffen das Rechnungswesen.', book:{abs:'Kasseler Sparkasse',an:'Rewe',bem:'Info Onlinebanking'}},
   {nr:'07', from:'Werner KG · Mühlenstr. 20 · 31785 Hameln',
    to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firma, subject:'Anfrage nach Kopierpapier Trend White',
    inhalt:['Anfrage: 180 Pakete à 500 Blatt','Bitte um Liefertermin sowie Liefer- und Zahlungsbedingungen'],
-   dept:'Verkauf', deptWhy:'Ein Kunde fragt nach Ware – Anfragen bearbeitet der Verkauf.', book:{abs:'Werner KG',bem:'Anfrage'}},
+   dept:'Verkauf', alt:['Rechnungswesen'], deptWhy:'Ein Kunde fragt nach Ware – Anfragen bearbeitet der Verkauf.', book:{abs:'Werner KG Anfrage',an:'Rewe',bem:'Verkauf'}},
   {nr:'08', from:'Sommerfeld Bürosysteme GmbH · Postfach 12 34 · 45141 Essen',
    to:['Büro King GmbH','<b>Herrn Martin Gewitzt</b>','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firmaName, subject:'Bestellung von Tintenstrahldruckern',
    inhalt:['Bestellung: 10 Tintenstrahldrucker Desktop 150','Preis: 250,00 € je Stück'],
-   dept:'Verkauf', person:'Hr. Gewitzt', deptWhy:'Eine Kundenbestellung geht an den Verkauf – hier an Herrn Gewitzt.', book:{abs:'Sommerfeld Bürosysteme',bem:'Bestellung'}},
+   dept:'Verkauf', person:'Hr. Gewitzt', deptWhy:'Eine Kundenbestellung geht an den Verkauf – hier an Herrn Gewitzt.', book:{abs:'Sommerfeld Bürosysteme',an:'Verkauf Hr. Gewitzt',bem:'Bestellung'}},
   {nr:'09', from:'Claudia Aschenbrenner · Karlsbergerstr. 127 A · 34111 Kassel',
    to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firma, subject:'Bewerbung als Abteilungsleiterin Verkauf/Marketing',
    inhalt:['Anschreiben','Lebenslauf','Eine Übersicht über ihre Zeugnisse (keine Zeugniskopien)','Angekündigte Anlagen: Lebenslauf, Zeugnisse'],
    anlage:{frage:'Angekündigt sind Lebenslauf und Zeugnisse. Ist die Bewerbung vollständig?', complete:false,
      why:'Es liegt nur eine Übersicht bei – die Zeugnisse selbst fehlen. Das wird vermerkt.'},
-   dept:'Personalabteilung', deptWhy:'Bewerbungen bearbeitet die Personalabteilung.', book:{abs:'Claudia Aschenbrenner',bem:'Bewerbung – Zeugnisse fehlen'}}
+   dept:'Personalabteilung', deptWhy:'Bewerbungen bearbeitet die Personalabteilung.', book:{abs:'Claudia Aschenbrenner',an:'Personalverwaltung',bem:'Bewerbung/ Zeugnisse fehlen'}}
  ]},
- 2:{date:'25.09.2025', letters:[
+ 2:{date:'01.12.2026', letters:[
   {nr:'01', from:'Brode GmbH · Müllerweg 3 · 31134 Hildesheim',
    to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firma, subject:'Anfrage nach Rollcontainern',
    inhalt:['Anfrage: 150 Rollcontainer, weiß, mindestens zwei Schubladen','Frage nach Liefer- und Zahlungsbedingungen'],
-   dept:'Verkauf', deptWhy:'Ein Kunde fragt nach Ware – Anfragen bearbeitet der Verkauf.', book:{abs:'Brode GmbH',bem:'Anfrage'}},
+   dept:'Verkauf', deptWhy:'Ein Kunde fragt nach Ware – Anfragen bearbeitet der Verkauf.', book:{abs:'Brode GmbH',an:'Verkauf',bem:'Anfrage'}},
   {nr:'02', from:'DEBECA Krankenversicherungsverein a. G. · Spohrstraße 8 · 34117 Kassel',
    to:['<b>Frau Melanie Grün</b>','Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'closed', why:WHY.nameVor+' Absender ist eine private Krankenversicherung – also Privatpost.', dept:'Lager und Versand', person:'Fr. Grün',
-   deptWhy:'Frau Grün arbeitet im Lager und Versand.', book:{abs:'DEBECA KV',bem:'Privatpost – ungeöffnet'}},
+   deptWhy:'Frau Grün arbeitet im Lager und Versand.', book:{abs:'Debeca KV',an:'Frau Grün/Abt. Lager und Versand',bem:'Privatpost ungeöffnet'}},
   {nr:'03', from:'Nordbüro KG · Schiffgraben 12 · 30169 Hannover',
    to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firma, subject:'Reparaturangebot für die Druckmaschine',
    inhalt:['Kosten ca.: Diagnose 50 €, Ersatzteile 80 €, Arbeitszeit 80 €, Lieferung 5 €','Dauer voraussichtlich 3 Wochen'],
-   dept:'Einkauf', alt:['Rechnungswesen'], deptWhy:'Ein Angebot eines Lieferanten geht an den Einkauf. (Auch Rewe ist okay, weil es um Kosten geht.)', book:{abs:'Nordbüro KG',bem:'Reparaturangebot'}},
+   dept:'Einkauf', alt:['Rechnungswesen'], deptWhy:'Ein Angebot eines Lieferanten geht an den Einkauf. (Auch Rewe ist okay, weil es um Kosten geht.)', book:{abs:'Nord Büro KG',an:'Einkauf/Rewe',bem:'Angebot'}},
   {nr:'04', from:'Weller & Fritze OHG · Kölner Str. 45 · 34117 Kassel',
    to:['Bürofix OHG','Friedrich-Schiller-Str. 16','34212 Kassel'],
-   action:'return', why:WHY.irr, book:{abs:'Weller & Fritze OHG',bem:'Irrläufer (Bürofix) – zurück'}},
+   action:'return', why:WHY.irr, book:{abs:'Weller und Fritze OHG',an:'Irrläufer Bürofix',bem:'Zurück zur Post'}},
   {nr:'05', from:'Schneider Büroeinrichtungen · Schlossstraße 15 · 70184 Stuttgart',
    to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firma, subject:'Einladung zur Hausmesse am 20.02.2026',
    inhalt:['Einladung zum Messestand, Sortiment „Gesundes Arbeiten“','Flyer Büromesse','Angekündigte Anlage: Flyer Büromesse'],
    anlage:{frage:'Angekündigt ist ein Flyer zur Büromesse. Ist alles da?', complete:true,
      why:'Der Flyer liegt bei – alles vollständig.'},
-   dept:'Einkauf', deptWhy:'Ein Lieferant zeigt neue Produkte – das ist interessant für den Einkauf.', book:{abs:'Schneider Büroeinrichtungen',bem:'Messeeinladung'}},
+   dept:'Einkauf', deptWhy:'Ein Lieferant zeigt neue Produkte – das ist interessant für den Einkauf.', book:{abs:'Schneider Büroeinrichtungen',an:'Einkauf',bem:'Messeeinladung'}},
   {nr:'06', from:'Hauspost · Büro King GmbH · Geschäftsführung',
    to:['<b>Herrn Norman Sabitzer – persönlich</b>','Abteilung Verkauf','– Hauspost –'],
    action:'closed', why:WHY.persoenlich+' Das gilt auch für interne Post.', dept:'Verkauf', person:'Hr. Sabitzer',
-   deptWhy:'Herr Sabitzer arbeitet im Verkauf.', book:{abs:'Büro King GmbH (intern)',bem:'Interne Post, persönlich – ungeöffnet'}}
+   deptWhy:'Herr Sabitzer arbeitet im Verkauf.', book:{abs:'Büro King GmbH',an:'Verkauf Hr. Sabitzer',bem:'Interne Post für Mitarbeiter',nr:''}}
  ]}
 };
+
+/* ---------- Briefinhalte (nach dem Öffnen) ---------- */
+const TYPEN=['Anfrage','Angebot','Bestellung','Rechnung / Quittung','Bewerbung','Information','Einladung'];
+const BRIEFE={
+ '1-1':{kopf:'Saturn Electro Handels-GmbH, Kassel', betreff:'Rechnung Nr. 3418/00', text:['Pos. 1: Notebook Sony VGN-AR 41 E – 500,00 €','Rechnungsbetrag: 500,00 €','Betrag dankend erhalten – Barzahlung, Kasse 3. Vielen Dank für Ihren Auftrag.'], umschlag:[['🧾','Rechnung']], typ:'Rechnung / Quittung', typWhy:'Eine Rechnung über gekaufte Ware – mit dem Vermerk, dass schon bezahlt wurde.'},
+ '1-2':{kopf:'SB Union, Kassel', betreff:'Rechnung Nr. 2008Boo64739290', text:['Für Ihren Einkauf erlauben wir uns zu berechnen:','Lebensmittel, diverse – 143,50 €','Betrag dankend erhalten – Bankscheck Nr. 4711'], umschlag:[['🧾','Rechnung mit Zahlungsvermerk']], typ:'Rechnung / Quittung', typWhy:'„Betrag dankend erhalten“ heißt: bezahlt. Das ist eine Quittung.'},
+ '1-5':{kopf:'NordBüro KG, Hannover', betreff:'Angebot Nr. 21016', text:['Sehr geehrte Damen und Herren, vielen Dank für Ihre Anfrage. Den gewünschten Artikel bieten wir Ihnen wie folgt an:','50 Rollcontainer zu je 110,10 € – Summe inkl. USt: 6.550,95 €','Zahlungsziel 30 Tage, 2 % Skonto bei Zahlung innerhalb von 14 Tagen, Lieferung frei Haus.','Beachten Sie auch die Rabattstaffel in der Anlage!'], gruss:'i. A. Florian Köhler', anlZeile:'Rabattstaffel', umschlag:[['📄','Angebot – Seite 1 von 2']], anlagen:[['Rabattstaffel',false]], anlWhy:'Im Umschlag liegt nur Seite 1. Die angekündigte Rabattstaffel fehlt – das wird im Posteingangsbuch vermerkt.', typ:'Angebot', typWhy:'Ein Lieferant bietet uns Ware an: ein Angebot.'},
+ '1-6':{kopf:'Kasseler Sparkasse', betreff:'Informationen für Kunden – Onlinebanking', text:['Sehr geehrte Damen und Herren,','in der nächsten Woche stellen wir das Sicherheitsverfahren für das Online-Banking um.'], umschlag:[['📄','Kundeninformation']], typ:'Information', typWhy:'Die Bank informiert uns nur – sie will nichts verkaufen und nichts kaufen.'},
+ '1-7':{kopf:'Werner KG, Hameln', betreff:'Anfrage nach Kopierpapier Trend White', text:['Sehr geehrte Damen und Herren,','wir benötigen kurzfristig Kopierpapier Trend White. Bitte senden Sie uns ein Angebot über 180 Pakete à 500 Blatt.','Teilen Sie uns bitte Ihren schnellstmöglichen Liefertermin sowie die Liefer- und Zahlungsbedingungen mit.'], gruss:'Baumann', umschlag:[['📄','Anfrage']], typ:'Anfrage', typWhy:'Die Werner KG bittet um ein Angebot – das ist eine Anfrage.'},
+ '1-8':{kopf:'Sommerfeld Bürosysteme GmbH, Essen', betreff:'Bestellung von Tintenstrahldruckern', text:['Sehr geehrter Herr Gewitzt,','Ihr Angebot hat uns überzeugt. Darum erhalten Sie unseren Auftrag.','Liefern Sie uns bitte sofort 10 Tintenstrahldrucker, Marke Desktop 150, zum Preis von 250,00 € je Stück.'], gruss:'i. A. Emilio Lanzetti', umschlag:[['📄','Bestellung']], typ:'Bestellung', typWhy:'„Ihr Angebot hat uns überzeugt … liefern Sie uns“ – der Kunde bestellt.'},
+ '1-9':{kopf:'Claudia Aschenbrenner, Kassel', betreff:'Bewerbung um die Stelle als Abteilungsleiterin Verkauf/Marketing', text:['Sehr geehrte Damen und Herren,','hiermit möchte ich mich bei Ihnen um die Stelle als Abteilungsleiterin in Ihrer Abteilung Verkauf/Marketing bewerben. …','Sehr gern würde ich mich in einem persönlichen Gespräch bei Ihnen vorstellen.'], gruss:'Claudia Aschenbrenner', anlZeile:'Lebenslauf, Zeugnisse', umschlag:[['📄','Anschreiben'],['👤','Lebenslauf'],['📋','Übersicht über die Zeugnisse (keine Zeugnisse)']], anlagen:[['Lebenslauf',true],['Zeugnisse',false]], anlWhy:'Der Lebenslauf liegt bei. Statt der Zeugnisse gibt es nur eine Übersicht – die Zeugnisse selbst fehlen.', typ:'Bewerbung', typWhy:'Frau Aschenbrenner bewirbt sich um eine Stelle.'},
+ '2-0':{kopf:'Brode GmbH, Hildesheim', betreff:'Anfrage nach Rollcontainern', text:['Sehr geehrte Damen und Herren,','durch Ihre Werbeanzeigen wurden wir auf Ihr Unternehmen aufmerksam. Senden Sie uns ein Angebot über 150 Rollcontainer, Farbe Weiß, mindestens zwei Schubladen.','Wie sind Ihre Liefer- und Zahlungsbedingungen? Ist es Ihnen möglich, sofort zu liefern?'], gruss:'i. A. Renate Lüsser', umschlag:[['📄','Anfrage']], typ:'Anfrage', typWhy:'Die Brode GmbH bittet um ein Angebot – eine Anfrage.'},
+ '2-2':{kopf:'Nordbüro KG, Hannover', betreff:'Reparaturangebot', text:['Sehr geehrte Damen und Herren,','Bezug nehmend auf Ihr Schreiben unterbreiten wir Ihnen gerne unser Angebot:','Diagnose ca. 50,00 € · Ersatzteile ca. 80,00 € · Arbeitszeit ca. 80,00 € · Lieferung/Verpackung 5,00 €','Die Reparatur Ihrer Druckmaschine dauert voraussichtlich 3 Wochen.'], gruss:'i. A. Tino Wingenfeld', umschlag:[['📄','Reparaturangebot']], typ:'Angebot', typWhy:'Die Nordbüro KG bietet uns eine Reparatur an – ein Angebot.'},
+ '2-4':{kopf:'Schneider Büroeinrichtungen, Stuttgart', betreff:'Einladung zur Hausmesse am 20.02.2026', text:['Sehr geehrte Damen und Herren,','wir möchten Sie einladen, unseren Messestand zu besuchen. Wir freuen uns, Ihnen unsere neuen Produkte aus dem Sortiment „Gesundes Arbeiten“ vorzustellen.','Vereinbaren Sie gern einen Termin mit uns.'], gruss:'Inge Meister, Verkauf', anlZeile:'Flyer Büromesse', umschlag:[['📄','Einladung'],['📰','Flyer Büromesse']], anlagen:[['Flyer Büromesse',true]], anlWhy:'Der Flyer liegt bei – die Sendung ist vollständig.', typ:'Einladung', typWhy:'Ein Lieferant lädt uns zu seiner Messe ein.'}
+};
+const briefOf=()=>BRIEFE[`${korbNr}-${idx}`];
+function ptsFor(l,i){ const b=BRIEFE[`${korbNr}-${i}`]; if(l.action==='return') return 1; if(l.action==='closed') return 2; return 3+(b&&b.anlagen?1:0); }
+
+const HELP_DEPT=`<details class="help"><summary>💡 Tipp: So findest du die richtige Abteilung</summary><ol>
+<li><b>Ist der Brief persönlich?</b> Dann bekommt ihn die Person – schau, in welcher Abteilung sie arbeitet.</li>
+<li><b>Geht es um Geld?</b> Rechnung, Quittung, Bank → <b>Rechnungswesen</b></li>
+<li><b>Will der Absender etwas von uns kaufen?</b> Er ist unser Kunde → <b>Verkauf</b></li>
+<li><b>Will der Absender uns etwas verkaufen?</b> Er ist unser Lieferant → <b>Einkauf</b></li>
+<li><b>Geht es um Mitarbeiter oder Bewerber?</b> → <b>Personalabteilung</b></li>
+</ol><div style="font-size:.9rem">Beispiel: Saturn schickt eine Rechnung. Wir haben dort gekauft und müssen bezahlen – es geht um Geld → Rechnungswesen.</div></details>`;
 
 /* ---------- Spiel ---------- */
 let K=null, korbNr=0, idx=0, pts=0, maxPts=0, streak=0, bestStreak=0, book=[], qCount=0, scanMode=false, letterPts=0;
@@ -394,7 +439,7 @@ $('other').onclick=()=>{ scanMode=false; history.replaceState(null,'',location.p
 function show(v){['startView','workView','endView'].forEach(x=>$(x).style.display=x===v?'':'none');window.scrollTo({top:0,behavior:'smooth'});}
 function startKorb(n){
   scanMode=false; korbNr=n; K=KOERBE[n]; idx=0; pts=0; streak=0; bestStreak=0; book=[];
-  maxPts=K.letters.reduce((s,l)=>s+1+(l.anlage?1:0)+(l.action==='return'?0:1),0);
+  maxPts=K.letters.reduce((s,l,i)=>s+ptsFor(l,i),0);
   $('korbTitle').textContent=`Postkorb ${n} · Eingang ${K.date}`;
   show('workView'); updateHud(); showLetter();
 }
@@ -431,11 +476,11 @@ function showLetter(){
     }
   });
 }
-function askChoice({title,options,correct,okText,noText,onDone,big}){
+function askChoice({title,options,correct,okText,noText,onDone,big,help}){
   qCount++;
   const flow=$('flow');
   const q=document.createElement('div'); q.className='question';
-  q.innerHTML=`<h3><span class="qnum">${qCount}</span><span>${title}</span></h3><div class="choices${big?' big':''}"></div><div class="fbx"></div>`;
+  q.innerHTML=`<h3><span class="qnum">${qCount}</span><span>${title}</span></h3>${help||''}<div class="choices${big?' big':''}"></div><div class="fbx"></div>`;
   flow.appendChild(q);
   const box=q.querySelector('.choices'), fb=q.querySelector('.fbx');
   let tries=0;
@@ -462,18 +507,43 @@ function askChoice({title,options,correct,okText,noText,onDone,big}){
   setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'center'}),80);
 }
 function stepOpen(l){
-  const d=document.createElement('div'); d.className='letter'; d.id='letter';
-  d.innerHTML=`<h4>📄 ${l.subject}</h4><div><b>Im Umschlag:</b></div><ul>${l.inhalt.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+  const b=briefOf();
+  const d=document.createElement('div'); d.className='letter brief'; d.id='letter';
+  d.innerHTML=`<div class="kopf">${b.kopf}</div><div class="betreff">${b.betreff}</div>${b.text.map(t=>`<p>${t}</p>`).join('')}${b.gruss?`<p>Mit freundlichen Grüßen<br>${b.gruss}</p>`:''}${b.anlZeile?`<div class="anl">Anlage: <b>${b.anlZeile}</b></div>`:''}`;
   $('flow').appendChild(d);
-  if(l.anlage){
-    askChoice({
-      title:'Anlagen prüfen: '+l.anlage.frage,
-      options:[['ja','👍 Ja, alles da'],['nein','👎 Nein, es fehlt etwas']],
-      correct:[l.anlage.complete?'ja':'nein'], okText:l.anlage.why,
-      noText:'Vergleiche: Was wird im Brief angekündigt – und was liegt wirklich im Umschlag?',
-      onDone:()=>stepStamp(l,'letter')
-    });
-  } else stepStamp(l,'letter');
+  const u=document.createElement('div'); u.className='umschlag';
+  u.innerHTML=`<div class="lbl">✉️ Das lag im Umschlag:</div><div class="papers">${b.umschlag.map(([ic,t])=>`<div class="paper"><span class="ic">${ic}</span>${t}</div>`).join('')}</div>`;
+  $('flow').appendChild(u);
+  if(b.anlagen) askAnlagen(b,()=>stepStamp(l,'letter')); else stepStamp(l,'letter');
+}
+function askAnlagen(b,onDone){
+  qCount++;
+  const q=document.createElement('div'); q.className='question';
+  q.innerHTML=`<h3><span class="qnum">${qCount}</span><span>Anlagen prüfen: Lies unten im Brief, welche Anlagen angekündigt sind. Liegen sie im Umschlag?</span></h3><div class="rows"></div><p style="margin:10px 0 0"><button class="big-btn" disabled>Prüfen</button></p><div class="fbx"></div>`;
+  $('flow').appendChild(q);
+  const rows=q.querySelector('.rows'), btn=q.querySelector('.big-btn'), fb=q.querySelector('.fbx');
+  const choice=b.anlagen.map(()=>null); let tries=0;
+  b.anlagen.forEach(([name],k)=>{
+    const r=document.createElement('div'); r.className='anlrow';
+    r.innerHTML=`<span class="nm">📎 ${name}</span><button data-v="1">liegt bei</button><button data-v="0">fehlt</button>`;
+    r.querySelectorAll('button').forEach(x=>x.onclick=()=>{ choice[k]=x.dataset.v==='1'; r.querySelectorAll('button').forEach(y=>y.classList.toggle('sel',y===x)); r.classList.remove('ok','no'); btn.disabled=choice.some(c=>c===null); });
+    rows.appendChild(r);
+  });
+  btn.onclick=()=>{
+    tries++;
+    let all=true;
+    [...rows.children].forEach((r,k)=>{ const ok=choice[k]===b.anlagen[k][1]; all=all&&ok; r.classList.toggle('ok',ok); r.classList.toggle('no',!ok); });
+    if(all){
+      if(tries===1){pts++;letterPts++;streak++;bestStreak=Math.max(bestStreak,streak);}
+      sOk(); updateHud(); btn.disabled=true; rows.querySelectorAll('button').forEach(x=>x.disabled=true);
+      fb.innerHTML=`<div class="fb ok"><span class="emo">✅</span><div><b>${tries===1?'Richtig!':'Jetzt stimmt’s!'}</b> ${b.anlWhy}</div></div>`;
+      setTimeout(onDone,450);
+    } else {
+      streak=0; sNo(); updateHud();
+      fb.innerHTML=`<div class="fb no"><span class="emo">🤔</span><div><b>Noch nicht.</b> Vergleiche die Zeile „Anlage:“ im Brief mit dem, was im Umschlag lag.</div></div>`;
+    }
+  };
+  setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'center'}),80);
 }
 function stepStamp(l,target){
   qCount++;
@@ -490,22 +560,34 @@ function stepStamp(l,target){
   setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'center'}),80);
 }
 function stepDept(l,closed){
+  const b=briefOf();
+  if(!closed && b && !l._typDone){
+    askChoice({
+      title:'Was für ein Schreiben ist das?',
+      options:TYPEN.map(t=>[t,t]), correct:[b.typ], okText:b.typWhy,
+      noText:'Lies den Betreff und den ersten Satz noch einmal. Was will der Absender?',
+      onDone:()=>{ l._typDone=true; stepDept(l,closed); }
+    });
+    return;
+  }
+  l._typDone=false;
   askChoice({
     title: closed?'Der Brief bleibt zu. In welche Abteilung bringst du ihn?':'An welche Abteilung geht der Brief?',
     options:DEPTS.map(d=>[d,d]),
     correct:[l.dept].concat(l.alt||[]), okText:l.deptWhy,
-    noText:'Schau in die Liste „Wer arbeitet wo?“. Wer kümmert sich um so etwas?',
+    noText:'Öffne den Tipp über den Buttons und geh die Fragen der Reihe nach durch.',
+    help:HELP_DEPT,
     onDone:()=>finishLetter(l)
   });
 }
 function finishLetter(l){
-  const an = l.action==='return' ? '–' : (l.person ? `${l.dept} (${l.person})` : l.dept);
-  const entry={datum:K.date, abs:l.book.abs, an, bem:l.book.bem, nr:l.nr};
+  const an = l.book.an!==undefined ? l.book.an : (l.action==='return' ? '' : (l.person ? `${l.dept} (${l.person})` : l.dept));
+  const entry={datum:K.date, abs:l.book.abs, an, bem:l.book.bem, nr:(l.book.nr!==undefined?l.book.nr:l.nr)};
   if(scanMode){ finishScan(l,entry,an); return; }
   book.push(entry);
   const last=idx===K.letters.length-1;
   const d=document.createElement('div'); d.className='question';
-  d.innerHTML=`<div class="entry">📒 <b>Eingetragen ins Posteingangsbuch:</b><br>${l.book.abs} → ${an} · <i>${l.book.bem}</i></div>
+  d.innerHTML=`<div class="entry">📒 <b>Eingetragen ins Posteingangsbuch:</b><br>Absender: <b>${l.book.abs}</b> · Empfänger/weitergeleitet an: <b>${an||"–"}</b> · Bemerkung: <i>${l.book.bem}</i></div>
     <p style="margin:14px 0 0;text-align:center"><button class="big-btn">${last?'🏁 Postkorb abschließen':'Nächster Brief ➜'}</button></p>`;
   $('flow').appendChild(d);
   d.querySelector('button').onclick=()=>{ idx++; if(idx<K.letters.length){ showLetter(); window.scrollTo({top:0,behavior:'smooth'}); } else endKorb(); };
@@ -537,7 +619,7 @@ function endKorb(){
   sWin(); if(q>=.5) confetti();
 }
 function renderBook(){
-  $('endBook').innerHTML=book.length?`<table><thead><tr><th>Datum Eingang</th><th>Absender</th><th>Empfänger / weitergeleitet an</th><th>Bemerkungen / ungeöffnet</th><th>Nr.</th></tr></thead><tbody>
+  $('endBook').innerHTML=book.length?`<table><thead><tr><th>Datum Eingang</th><th>Absender</th><th>Empfänger / weitergeleitet an</th><th>Bemerkungen / ungeöffnet</th><th>Bearbeitet durch …</th></tr></thead><tbody>
     ${book.map(b=>`<tr><td>${b.datum}</td><td>${b.abs}</td><td>${b.an}</td><td>${b.bem}</td><td>${b.nr}</td></tr>`).join('')}</tbody></table>`:'<p>Noch keine Einträge.</p>';
 }
 
@@ -556,11 +638,11 @@ function confirmReset(){
 }
 function finishScan(l,entry,an){
   const st=loadStore(korbNr);
-  st[idx]={entry,pts:letterPts,max:1+(l.anlage?1:0)+(l.action==='return'?0:1)};
+  st[idx]={entry,pts:letterPts,max:ptsFor(l,idx)};
   saveStore(korbNr,st); updateHud();
   const done=Object.keys(st).length, all=done>=K.letters.length;
   const d=document.createElement('div'); d.className='question';
-  d.innerHTML=`<div class="entry">📒 <b>Eingetragen ins Posteingangsbuch:</b><br>${l.book.abs} → ${an} · <i>${l.book.bem}</i></div>
+  d.innerHTML=`<div class="entry">📒 <b>Eingetragen ins Posteingangsbuch:</b><br>Absender: <b>${l.book.abs}</b> · Empfänger/weitergeleitet an: <b>${an||"–"}</b> · Bemerkung: <i>${l.book.bem}</i></div>
     <p style="margin:14px 0 6px;text-align:center;font-weight:bold">${all?'🎉 Alle Umschläge bearbeitet!':'📷 Leg den Umschlag weg und scanne den nächsten.'}</p>
     <p style="margin:0;text-align:center"><button class="big-btn">${all?'🏁 Ergebnis ansehen':'📒 Posteingangsbuch ansehen'}</button></p>`;
   $('flow').appendChild(d);
