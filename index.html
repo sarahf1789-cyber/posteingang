@@ -185,7 +185,7 @@
     <div class="hero">
       <div>
         <h2>Willkommen in der Poststelle! 👋</h2>
-        <p>Heute ist viel Post gekommen. Deine Aufgabe: Jeden Brief richtig bearbeiten – <b>öffnen oder nicht?</b> Ist alles drin? Stempeln. Und dann ab in die richtige Abteilung.</p>
+        <p>Heute ist viel Post gekommen. Deine Aufgabe: Jeden Brief richtig bearbeiten – <b>öffnen oder nicht?</b> Ist alles drin? Wohin muss der Brief? Und jeden Brief trägst du in dein Posteingangsbuch auf Papier ein.</p>
         <p>Für jede richtige Antwort im ersten Versuch bekommst du einen Punkt. Mehrere richtige Antworten hintereinander geben eine 🔥-Serie!</p>
       </div>
       <div style="text-align:center">
@@ -204,7 +204,14 @@
         </svg>
       </div>
     </div>
-    <h3 style="margin-top:18px">Wähle deinen Postkorb:</h3>
+    <div class="scan-hint" style="margin-top:18px;background:#fff9c4;border-radius:18px;padding:18px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div style="font-size:3rem">📷</div>
+      <div style="flex:1;min-width:220px"><h3 style="margin:0 0 6px">So geht's los</h3>
+      Nimm einen Umschlag aus dem Postkorb und scanne den <b>QR-Code</b> mit der Kamera. Dann öffnet sich genau dieser Brief.<br>
+      Wenn du fertig bist: Umschlag zurücklegen und den nächsten scannen.</div>
+    </div>
+    <div id="teacherArea" style="display:none">
+    <h3 style="margin-top:18px">Lehrkraft-Modus: Postkorb zum Testen wählen</h3>
     <div class="korb-grid">
       <div class="korb-card" data-korb="1">
         <div style="font-size:2.4rem">📥</div>
@@ -214,6 +221,8 @@
         <div style="font-size:2.4rem">📬</div>
         <h3>Postkorb 2</h3><div class="meta">Eingang am 01.12.2026 · 6 Sendungen</div>
       </div>
+    </div>
+    <p style="font-size:.9rem;color:#555">Nur für die Lehrkraft sichtbar (Adresse endet auf #lehrkraft). Hier kann man die Briefe ohne QR-Code der Reihe nach durchklicken.</p>
     </div>
   </div>
 
@@ -434,7 +443,7 @@ const POSTMARK=`<svg width="70" height="40" viewBox="0 0 70 40" aria-hidden="tru
 
 document.querySelectorAll('[data-korb]').forEach(c=>c.onclick=()=>startKorb(+c.dataset.korb));
 $('again').onclick=()=>{ if(scanMode){ if(confirmReset()) { clearStore(korbNr); endKorb(); } } else startKorb(korbNr); };
-$('other').onclick=()=>{ scanMode=false; history.replaceState(null,'',location.pathname+location.search); show('startView'); };
+$('other').onclick=()=>{ const t=!scanMode; scanMode=false; history.replaceState(null,'',location.pathname+location.search+(t?'#lehrkraft':'')); route(); show('startView'); };
 
 function show(v){['startView','workView','endView'].forEach(x=>$(x).style.display=x===v?'':'none');window.scrollTo({top:0,behavior:'smooth'});}
 function startKorb(n){
@@ -649,6 +658,9 @@ function finishScan(l,entry,an){
   setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'center'}),80);
 }
 function route(){
+  const teacher=location.hash==='#lehrkraft';
+  $('teacherArea').style.display=teacher?'':'none';
+  if(teacher){ scanMode=false; show('startView'); return; }
   const m=/^#k([12])-(\d{1,2})$/.exec(location.hash);
   if(!m) return;
   const n=+m[1], i=+m[2]-1;
