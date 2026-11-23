@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testseite – BÜA</title>
+<style>
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#CCCCFF;color:#262640}
+  header{background:#6C6CD9;color:#fff;padding:18px 20px}
+  header h1{margin:0;font-size:1.4rem}
+  header p{margin:4px 0 0;font-size:.9rem;opacity:.9}
+  main{max-width:640px;margin:20px auto;padding:0 16px}
+  .card{background:#fff;border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+  .card h2{margin:0 0 10px;font-size:1.05rem}
+  button.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:12px;border:2px solid #D1D1D1;border-radius:8px;background:#fff;font-size:1rem;cursor:pointer;font-family:inherit}
+  button.opt:hover{border-color:#9E9EFF}
+  button.ok{background:#dff5e1;border-color:#3a9a4a}
+  button.no{background:#fde2e2;border-color:#c0392b}
+  .fb{margin-top:8px;font-size:.95rem;min-height:1.2em}
+  .stand{background:#FF9933;color:#fff;border-radius:8px;padding:10px 14px;font-weight:bold;text-align:center}
+  .score{text-align:center;font-weight:bold;font-size:1.1rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>Testseite Posteingang</h1>
+  <p>Kleine Übung zum Ausprobieren</p>
+</header>
+<main>
+  <div class="stand">Version 1 – wenn hier später „Version 2“ steht, hat die automatische Aktualisierung geklappt.</div>
+  <div id="quiz"></div>
+  <div class="card score" id="score">0 von 3 richtig</div>
+</main>
+<script>
+var FRAGEN=[
+  {f:"Ein Brief ist mit „persönlich“ an Frau Sabitzer adressiert. Was machst du?",
+   o:["Öffnen und ins Posteingangsbuch eintragen","Ungeöffnet an Frau Sabitzer weitergeben","Zurück an den Absender schicken"],r:1,
+   e:"Persönliche Post bleibt verschlossen – Briefgeheimnis!"},
+  {f:"Im Brief steht „Anlage: Preisliste“, aber es liegt keine bei. Was tust du?",
+   o:["Nichts, das ist egal","Vermerk „Anlage fehlt“ und beim Absender nachfragen","Den Brief wegwerfen"],r:1,
+   e:"Fehlende Anlagen werden vermerkt und nachgefordert."},
+  {f:"Ein Brief ist an die Büroboss GmbH adressiert. Es ist ein …",
+   o:["Irrläufer","Werbebrief","Einschreiben"],r:0,
+   e:"Falsch zugestellte Post nennt man Irrläufer – sie geht zurück an die Post bzw. den richtigen Empfänger."}
+];
+var richtig=0, q=document.getElementById('quiz');
+FRAGEN.forEach(function(F,i){
+  var c=document.createElement('div');c.className='card';
+  c.innerHTML='<h2>'+(i+1)+'. '+F.f+'</h2>';
+  var fb=document.createElement('div');fb.className='fb';
+  F.o.forEach(function(t,j){
+    var b=document.createElement('button');b.className='opt';b.textContent=t;
+    b.onclick=function(){
+      if(c.dataset.done)return; c.dataset.done=1;
+      var bs=c.querySelectorAll('button');
+      bs[F.r].classList.add('ok');
+      if(j===F.r){richtig++;fb.textContent='✅ Richtig! '+F.e;}
+      else{b.classList.add('no');fb.textContent='❌ Leider falsch. '+F.e;}
+      document.getElementById('score').textContent=richtig+' von 3 richtig';
+    };
+    c.appendChild(b);
+  });
+  c.appendChild(fb);q.appendChild(c);
+});
+</script>
+</body>
+</html>
