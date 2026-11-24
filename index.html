@@ -255,8 +255,8 @@
             <div><b>Einkauf</b><span class="who">Herr Emsig</span>Wir wollen etwas kaufen: Angebote und Messeeinladungen von Lieferanten</div>
             <div><b>Verkauf</b><span class="who">Herr Gewitzt, Herr Sabitzer</span>Kunden wollen etwas von uns kaufen: Anfragen und Bestellungen</div>
             <div><b>Rechnungswesen (Rewe)</b>Es geht um Geld: Rechnungen, Quittungen, Post von der Bank</div>
-            <div><b>Personalabteilung</b>Es geht um Mitarbeiter: Bewerbungen, Zeugnisse, Lohn</div>
-            <div><b>Lager und Versand</b><span class="who">Herr Scharf, Frau Grün</span>Ware kommt an oder geht raus: Lieferscheine, Versandpapiere</div>
+            <div><b>Personalabteilung</b><span class="who">Frau Grün</span>Es geht um Mitarbeiter: Bewerbungen, Zeugnisse, Lohn</div>
+            <div><b>Lager und Versand</b><span class="who">Herr Scharf</span>Ware kommt an oder geht raus: Lieferscheine, Versandpapiere</div>
           </div>
         </div>
         <div class="box" style="background:#fff9c4;border-color:#f3e58a">
@@ -394,8 +394,8 @@ const KOERBE={
    dept:'Verkauf', deptWhy:'Ein Kunde fragt nach Ware – Anfragen bearbeitet der Verkauf.', book:{abs:'Brode GmbH',an:'Verkauf',bem:'Anfrage'}},
   {nr:'02', from:'DEBECA Krankenversicherungsverein a. G. · Spohrstraße 8 · 34117 Kassel',
    to:['<b>Frau Melanie Grün</b>','Büro King GmbH','Schillerstraße 8','34117 Kassel'],
-   action:'closed', why:WHY.nameVor+' Absender ist eine private Krankenversicherung – also Privatpost.', dept:'Lager und Versand', person:'Fr. Grün',
-   deptWhy:'Frau Grün arbeitet im Lager und Versand.', book:{abs:'Debeca KV',an:'Frau Grün/Abt. Lager und Versand',bem:'Privatpost ungeöffnet'}},
+   action:'closed', why:WHY.nameVor+' Absender ist eine private Krankenversicherung – also Privatpost.', dept:'Personalabteilung', alt:['Rechnungswesen'], person:'Fr. Grün',
+   deptWhy:'Frau Grün arbeitet in der Personalverwaltung (siehe Organigramm).', book:{abs:'Debeca KV',an:'Frau Grün/Personalverwaltung',bem:'Privatpost ungeöffnet'}},
   {nr:'03', from:'Nordbüro KG · Schiffgraben 12 · 30169 Hannover',
    to:['Büro King GmbH','Schillerstraße 8','34117 Kassel'],
    action:'open', why:WHY.firma, subject:'Reparaturangebot für die Druckmaschine',
