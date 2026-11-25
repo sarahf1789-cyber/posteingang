@@ -223,11 +223,11 @@
     <div class="korb-grid">
       <div class="korb-card" data-korb="1">
         <div style="font-size:2.4rem">📥</div>
-        <h3>Postkorb 1</h3><div class="meta">Eingang am 24.11.2026 · 10 Sendungen</div>
+        <h3>Postkorb 1</h3><div class="meta"><span class="heute"></span> · 10 Sendungen</div>
       </div>
       <div class="korb-card" data-korb="2">
         <div style="font-size:2.4rem">📬</div>
-        <h3>Postkorb 2</h3><div class="meta">Eingang am 01.12.2026 · 6 Sendungen</div>
+        <h3>Postkorb 2</h3><div class="meta"><span class="heute"></span> · 6 Sendungen</div>
       </div>
     </div>
     <p style="font-size:.9rem;color:#555">Nur für die Lehrkraft sichtbar (Adresse endet auf #lehrkraft). Hier kann man die Briefe ohne QR-Code der Reihe nach durchklicken.</p>
@@ -478,6 +478,9 @@ const HELP_DEPT=`<details class="help"><summary>💡 Tipp: So findest du die ric
 </ol><div style="font-size:.9rem">Beispiel: Saturn schickt eine Rechnung. Wir haben dort gekauft und müssen bezahlen – es geht um Geld → Rechnungswesen.</div></details>`;
 
 /* ---------- Spiel ---------- */
+const HEUTE=new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});
+KOERBE[1].date=HEUTE; KOERBE[2].date=HEUTE;
+document.querySelectorAll('.heute').forEach(e=>e.textContent='Eingang am '+HEUTE);
 let K=null, korbNr=0, idx=0, pts=0, maxPts=0, streak=0, bestStreak=0, book=[], qCount=0, scanMode=false, letterPts=0;
 const $=id=>document.getElementById(id);
 const stage=$('stage');
